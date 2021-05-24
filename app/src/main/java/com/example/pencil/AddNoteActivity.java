@@ -16,7 +16,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -27,7 +26,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -78,17 +76,21 @@ public class AddNoteActivity extends AppCompatActivity {
 
         //bottom navigation view setup
         navigationView = findViewById(R.id.bottomNavigation);
-        navigationView.setOnNavigationItemReselectedListener(new BottomNavigationView.OnNavigationItemReselectedListener() {
+        navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onNavigationItemReselected(@NonNull MenuItem item) {
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId())
                 {
                     case R.id.addImage:
                         showImagePickerDialog();
+                        return true;
+                    case R.id.addPaint:
 
-                        break;
+                        Intent intent = new Intent(AddNoteActivity.this,PaintActivity.class);
+                        startActivity(intent);
+                        return true;
                 }
-
+                return false;
             }
         });
 

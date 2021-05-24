@@ -61,7 +61,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/addnote_bottom_nav_menu"/>
+        app:menu="@menu/addnote_bottom_nav_menu"
+        android:theme="@style/Widget.MaterialComponents.BottomNavigationView"
+        app:itemBackground="@color/white"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/design_default_color_primary"/>
 
 
 

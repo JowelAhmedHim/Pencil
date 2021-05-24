@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/brushSize"
+        android:enabled="true"
+        app:showAsAction="ifRoom"
+        android:title="BrushSize"
+        android:icon="@drawable/ic_baseline_brush_24"/>
+
+    <item
+        android:id="@+id/eraserSize"
+        android:enabled="true"
+        app:showAsAction="ifRoom"
+        android:title="EraserSize"
+        android:icon="@drawable/eraser"/>
+    <item
+        android:id="@+id/brushColor"
+        android:enabled="true"
+        app:showAsAction="ifRoom"
+        android:title="BrushColor"
+        android:icon="@drawable/ic_baseline_color_lens_24"/>
+
+    <item
+        android:id="@+id/backgroundColor"
+        android:enabled="true"
+        app:showAsAction="ifRoom"
+        android:title="BackgroundColor"
+        android:icon="@drawable/ic_baseline_format_color_fill_24"/>
+
+</menu>
