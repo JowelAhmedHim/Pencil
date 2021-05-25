@@ -9,6 +9,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -30,6 +31,8 @@ import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.io.ByteArrayOutputStream;
 
 public class PaintActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -184,20 +187,8 @@ public class PaintActivity extends AppCompatActivity implements BottomNavigation
     }
 
 
-    public void saveFile(){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
-        {
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_PERMISSION);
-        }else {
-            saveBitmap();
-        }
-    }
 
-    public void saveBitmap(){
 
-        Bitmap bitmap;
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -213,7 +204,34 @@ public class PaintActivity extends AppCompatActivity implements BottomNavigation
             case R.id.undoAction:
                 paintView.returnLastAction();
                 break;
+            case R.id.savePaintFile:
+                saveFile();
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void saveFile(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+        {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_PERMISSION);
+        }else {
+            saveBitmap();
+        }
+    }
+
+    public void saveBitmap(){
+
+        Bitmap bitmap = paintView.getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100,stream);
+        byte[] byteArray = stream.toByteArray();
+
+        Intent intent = new Intent(this,AddNoteActivity.class);
+        intent.putExtra("image",byteArray);
+        startActivity(intent);
+        finish();
+
     }
 }

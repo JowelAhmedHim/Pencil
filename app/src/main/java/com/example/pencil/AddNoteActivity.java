@@ -71,6 +71,17 @@ public class AddNoteActivity extends AppCompatActivity {
         init();
         initPermission();
 
+        if (getIntent().hasExtra("image")){
+            Bitmap b = BitmapFactory.decodeByteArray(
+                    getIntent().getByteArrayExtra("image"),0,getIntent()
+                            .getByteArrayExtra("image").length);
+            Toast.makeText(this, "Successfully get intent", Toast.LENGTH_SHORT).show();
+            noteImageIv.setImageBitmap(b);
+        }
+
+
+
+
         selectedImagePath = "";
 
 
@@ -253,4 +264,8 @@ public class AddNoteActivity extends AppCompatActivity {
         }
         return filePath;
     }
+
+
+
+
 }
