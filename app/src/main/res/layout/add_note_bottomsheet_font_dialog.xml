@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <TextView
+        android:id="@+id/fontTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Font"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:layout_centerHorizontal="true"
+        />
+    <ImageView
+        android:id="@+id/fontSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_check_circle_24"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="10dp"/>
+
+
+    <RelativeLayout
+        android:id="@+id/fontColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:layout_below="@+id/fontTitle">
+        <View
+            android:id="@+id/blackColor"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/silver"/>
+        <View
+            android:id="@+id/redColor"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/orange"
+            android:layout_marginLeft="10dp"
+            android:layout_toEndOf="@+id/blackColor"/>
+        <View
+            android:id="@+id/yellowColor"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/yellow"
+            android:layout_marginLeft="10dp"
+            android:layout_toEndOf="@+id/redColor"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/fontFamily"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/fontColor">
+        <TextView
+            android:id="@+id/pacific"
+             android:layout_width="0dp"
+             android:layout_height="match_parent"
+             android:layout_weight="1"
+             android:gravity="center"
+             android:text="Pacifico"
+             android:padding="10dp"
+             android:fontFamily="@font/pacifico"
+            />
+        <TextView
+            android:id="@+id/amatic"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="AmaticSC"
+            android:padding="10dp"
+            android:fontFamily="@font/amaticbold"/>
+        <TextView
+            android:id="@+id/roboto"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Roboto"
+            android:padding="10dp"
+            android:fontFamily="@font/robotoblack"/>
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

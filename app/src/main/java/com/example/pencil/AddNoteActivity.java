@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
 import android.Manifest;
@@ -22,6 +23,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -61,7 +63,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class AddNoteActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener,TimePickerDialog.OnTimeSetListener {
+public class AddNoteActivity extends AppCompatActivity implements View.OnClickListener,TimePickerDialog.OnTimeSetListener {
 
     private static final int CAMERA_REQUEST_CODE = 200;
     private static final int STORAGE_REQUEST_CODE = 300;
@@ -84,17 +86,22 @@ public class AddNoteActivity extends AppCompatActivity implements AdapterView.On
     
 
     private BottomNavigationView navigationView;
-    private BottomSheetDialog bottomSheetDialog;
+    private BottomSheetDialog bottomSheetVoiceDialog,bottomSheetFontDialog;
 
     
     private Spinner spinner;
     private ProgressDialog progressDialog;
 
 
-  
 
+    private String fontColorState;
+    private String fontFamily ;
+
+    private  String currentDateAndTime;
+    private String noteCategory;
     private Uri imageUri;
     private String selectedImagePath;
+    private Bitmap paintBtm;
 
     private MediaRecorder mediaRecorder;
     private boolean isRecording = false;
@@ -130,10 +137,12 @@ public class AddNoteActivity extends AppCompatActivity implements AdapterView.On
         
         
         //getPaintImageFromIntent
-        getPaintImage();
-      
+         getPaintImage();
+         //getPresentTime
+         getPresentTime();
 
-
+         //getNoteCategory
+         getCategory();
 
 
         selectedImagePath = "";
@@ -146,6 +155,9 @@ public class AddNoteActivity extends AppCompatActivity implements AdapterView.On
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId())
                 {
+                    case R.id.addText:
+                         showBottomSheetFontDialog();
+                        return true;
                     case R.id.addImage:
                         showImagePickerDialog();
                         return true;
@@ -155,7 +167,7 @@ public class AddNoteActivity extends AppCompatActivity implements AdapterView.On
                         return true;
 
                     case R.id.addVoice:
-                        showBottomSheetDialog();
+                        showBottomSheetVoiceDialog();
                         return true;
                     case R.id.addColor:
                         showBackgroundColorPicker();
@@ -167,13 +179,42 @@ public class AddNoteActivity extends AppCompatActivity implements AdapterView.On
 
     }
 
+
+    private void getCategory() {
+
+        List<String> categories = new ArrayList<String>();
+        categories.add("Home");
+        categories.add("Work");
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,categories);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(arrayAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                noteCategory = (String) parent.getItemAtPosition(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void getPresentTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd_hh:mm", Locale.getDefault());
+        currentDateAndTime = sdf.format(new Date());
+        noteTime.setText(currentDateAndTime);
+    }
+
     private void getPaintImage() {
         if (getIntent().hasExtra("image")){
-            Bitmap b = BitmapFactory.decodeByteArray(
+             paintBtm = BitmapFactory.decodeByteArray(
                     getIntent().getByteArrayExtra("image"),0,getIntent()
                             .getByteArrayExtra("image").length);
             Toast.makeText(this, "Successfully get intent", Toast.LENGTH_SHORT).show();
-            notePaint.setImageBitmap(b);
+            notePaint.setImageBitmap(paintBtm);
+            notePaint.setVisibility(View.VISIBLE);
         }
     }
 
@@ -189,12 +230,7 @@ public class AddNoteActivity extends AppCompatActivity implements AdapterView.On
         noteImage = findViewById(R.id.noteImage);
         notePaint = findViewById(R.id.notePaint);
         spinner = findViewById(R.id.spinner);
-        List<String> categories = new ArrayList<String>();
-        categories.add("Home");
-        categories.add("Work");
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,categories);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(arrayAdapter);
+
 
     }
     
@@ -204,39 +240,103 @@ public class AddNoteActivity extends AppCompatActivity implements AdapterView.On
         recordingPermission = new String[]{Manifest.permission.RECORD_AUDIO};
     }
 
-    private void showBackgroundColorPicker(){
 
-        int color = colorBackground;
-        ColorPickerDialogBuilder
-                .with(this)
-                .setTitle("Choose color")
-                .initialColor(color)
-                .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
-                .density(12)
-                .setOnColorSelectedListener(new OnColorSelectedListener() {
-                    @Override
-                    public void onColorSelected(int selectedColor) {
-                        Toast.makeText(AddNoteActivity.this, "onColorSelected: 0x"+ Integer.toHexString(selectedColor), Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .setPositiveButton("ok", new ColorPickerClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
+    //font functionality
+    private void showBottomSheetFontDialog() {
+        bottomSheetFontDialog = new BottomSheetDialog(this);
+        bottomSheetFontDialog.setContentView(R.layout.add_note_bottomsheet_font_dialog);
+        bottomSheetFontDialog.setCancelable(false);
 
-                            colorBackground = selectedColor;
-                            relativeLayout.setBackgroundColor(colorBackground);
+        TextView amatic,pacific,roboto;
+        View black,yellow,orange;
+        ImageView fontSave;
 
-                    }
-                })
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                })
-                .build()
-                .show();
+        fontSave = bottomSheetFontDialog.findViewById(R.id.fontSave);
 
+        black = bottomSheetFontDialog.findViewById(R.id.blackColor);
+        yellow = bottomSheetFontDialog.findViewById(R.id.yellowColor);
+        orange = bottomSheetFontDialog.findViewById(R.id.redColor);
+        black.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                noteTitle.setTextColor(Color.BLACK);
+                noteDescription.setTextColor(Color.BLACK);
+                fontColorState = "black";
+
+            }
+        });
+        orange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                noteTitle.setTextColor(Color.RED);
+                noteDescription.setTextColor(Color.RED);
+                fontColorState = "red";
+
+            }
+        });
+        yellow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                noteTitle.setTextColor(Color.YELLOW);
+                noteDescription.setTextColor(Color.YELLOW);
+                fontColorState = "yellow";
+
+
+            }
+        });
+
+        fontSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetFontDialog.dismiss();
+            }
+        });
+
+
+        amatic = bottomSheetFontDialog.findViewById(R.id.amatic);
+        pacific = bottomSheetFontDialog.findViewById(R.id.pacific);
+        roboto = bottomSheetFontDialog.findViewById(R.id.roboto);
+        amatic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                amatic.setTextColor(Color.BLUE);
+                pacific.setTextColor(Color.BLACK);
+                roboto.setTextColor(Color.BLACK);
+                noteTitle.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.amaticbold));
+                noteDescription.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.amaticbold));
+                fontFamily = "amatic";
+
+            }
+        });
+
+        pacific.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                amatic.setTextColor(Color.BLACK);
+                pacific.setTextColor(Color.BLUE);
+                roboto.setTextColor(Color.BLACK);
+                noteTitle.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.pacifico));
+                noteDescription.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.pacifico));
+                fontFamily = "pacific";
+
+            }
+        });
+        roboto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                amatic.setTextColor(Color.BLACK);
+                pacific.setTextColor(Color.BLACK);
+                roboto.setTextColor(Color.BLUE);
+                noteTitle.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.robotoblack));
+                noteDescription.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.robotoblack));
+                fontFamily = "roboto";
+            }
+        });
+
+        bottomSheetFontDialog.create();
+        bottomSheetFontDialog.show();
     }
+
 
     //function of image taking note
     private void showImagePickerDialog() {
@@ -270,32 +370,31 @@ public class AddNoteActivity extends AppCompatActivity implements AdapterView.On
                     }
                 }).show();
     }
-
     private void pickFromGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent,IMAGE_PICK_GALLERY_CODE);
     }
-
     private void pickFromCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent,IMAGE_PICK_CAMERA_CODE);
     }
 
-    //function of voice recording note
-    private void showBottomSheetDialog() {
 
-        bottomSheetDialog = new BottomSheetDialog(this);
-        bottomSheetDialog.setContentView(R.layout.add_note_bottom_sheet_dialog);
-        bottomSheetDialog.setCancelable(false);
+    //function of voice recording note
+    private void showBottomSheetVoiceDialog() {
+
+        bottomSheetVoiceDialog = new BottomSheetDialog(this);
+        bottomSheetVoiceDialog.setContentView(R.layout.add_note_bottom_sheet_dialog);
+        bottomSheetVoiceDialog.setCancelable(false);
 
         ImageButton playBtn,cancelBtn,okBtn,pauseBtn;
         Chronometer timer;
-        timer = bottomSheetDialog.findViewById(R.id.chronometers);
-        playBtn=bottomSheetDialog.findViewById(R.id.play_btn);
-        pauseBtn = bottomSheetDialog.findViewById(R.id.pause_btn);
-        cancelBtn = bottomSheetDialog.findViewById(R.id.cancel_btn);
-        okBtn = bottomSheetDialog.findViewById(R.id.ok_btn);
-        bottomSheetDialog.show();
+        timer = bottomSheetVoiceDialog.findViewById(R.id.chronometers);
+        playBtn=bottomSheetVoiceDialog.findViewById(R.id.play_btn);
+        pauseBtn = bottomSheetVoiceDialog.findViewById(R.id.pause_btn);
+        cancelBtn = bottomSheetVoiceDialog.findViewById(R.id.cancel_btn);
+        okBtn = bottomSheetVoiceDialog.findViewById(R.id.ok_btn);
+        bottomSheetVoiceDialog.show();
 
         playBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -329,13 +428,12 @@ public class AddNoteActivity extends AppCompatActivity implements AdapterView.On
                     stopRecording();
 
                 }else {
-                    bottomSheetDialog.dismiss();
+                    bottomSheetVoiceDialog.dismiss();
                 }
             }
         });
 
     }
-
     private void startRecording() {
 
         String getFilePath = this.getExternalFilesDir("/").getAbsolutePath();
@@ -357,14 +455,97 @@ public class AddNoteActivity extends AppCompatActivity implements AdapterView.On
         }
         mediaRecorder.start();
     }
-
     private void stopRecording() {
 
         mediaRecorder.stop();
         mediaRecorder.release();
         mediaRecorder = null;
-        bottomSheetDialog.dismiss();
+        bottomSheetVoiceDialog.dismiss();
     }
+
+
+    //noteBackground Color picker
+    private void showBackgroundColorPicker(){
+
+        int color = colorBackground;
+        ColorPickerDialogBuilder
+                .with(this)
+                .setTitle("Choose color")
+                .initialColor(color)
+                .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
+                .density(12)
+                .setOnColorSelectedListener(new OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(int selectedColor) {
+                        Toast.makeText(AddNoteActivity.this, "onColorSelected: 0x"+ Integer.toHexString(selectedColor), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setPositiveButton("ok", new ColorPickerClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
+
+                        colorBackground = selectedColor;
+                        relativeLayout.setBackgroundColor(colorBackground);
+
+                    }
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .build()
+                .show();
+
+    }
+
+
+    //for alarm timePicker and notification via pending intent
+    private void showTimePicker() {
+
+
+        DialogFragment timePicker = new TimePickerFragment();
+        timePicker.show(getSupportFragmentManager(),"time picker");
+
+
+      /*  Calendar currentTime = Calendar.getInstance();
+        int hour = currentTime.get(Calendar.HOUR_OF_DAY);
+        int minute = currentTime.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(AddNoteActivity.this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                alertTime.setText(hourOfDay+":"+ minute);
+            }
+        },hour,minute,true);
+        timePickerDialog.show();*/
+    }
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        c.set(Calendar.MINUTE, minute);
+        c.set(Calendar.SECOND, 0);
+        updateTimeText(c);
+        startAlarm(c);
+
+    }
+    private void updateTimeText(Calendar c) {
+        String timeSet = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
+        alertTime.setText(timeSet);
+    }
+    private void startAlarm(Calendar c) {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
+        if (c.before(Calendar.getInstance())){
+            c.add(Calendar.DATE, 1);
+
+        }
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),pendingIntent);
+    }
+
 
     //checking all permission & request permission
     private boolean checkCameraPermission(){
@@ -459,6 +640,7 @@ public class AddNoteActivity extends AppCompatActivity implements AdapterView.On
                            InputStream inputStream = getContentResolver().openInputStream(selectedImage);
                            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                            noteImage.setImageBitmap(bitmap);
+                           noteImage.setVisibility(View.VISIBLE);
                            selectedImagePath =getPathFromUri(selectedImage);
 
                        } catch (FileNotFoundException e) {
@@ -471,6 +653,7 @@ public class AddNoteActivity extends AppCompatActivity implements AdapterView.On
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 if (bitmap != null){
                     noteImage.setImageBitmap(bitmap);
+                    noteImage.setVisibility(View.VISIBLE);
                 }
 
             }
@@ -492,17 +675,6 @@ public class AddNoteActivity extends AppCompatActivity implements AdapterView.On
     }
 
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String item = parent.getItemAtPosition(position).toString();
-        // Showing selected spinner item
-        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
 
     @Override
     public void onClick(View v) {
@@ -517,52 +689,6 @@ public class AddNoteActivity extends AppCompatActivity implements AdapterView.On
         
     }
 
-    private void showTimePicker() {
 
 
-        DialogFragment timePicker = new TimePickerFragment();
-        timePicker.show(getSupportFragmentManager(),"time picker");
-
-
-      /*  Calendar currentTime = Calendar.getInstance();
-        int hour = currentTime.get(Calendar.HOUR_OF_DAY);
-        int minute = currentTime.get(Calendar.MINUTE);
-
-        TimePickerDialog timePickerDialog = new TimePickerDialog(AddNoteActivity.this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                alertTime.setText(hourOfDay+":"+ minute);
-            }
-        },hour,minute,true);
-        timePickerDialog.show();*/
-    }
-
-
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        c.set(Calendar.MINUTE, minute);
-        c.set(Calendar.SECOND, 0);
-        updateTimeText(c);
-        startAlarm(c);
-
-    }
-
-    private void updateTimeText(Calendar c) {
-        String timeSet = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
-        alertTime.setText(timeSet);
-    }
-
-    private void startAlarm(Calendar c) {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlertReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
-        if (c.before(Calendar.getInstance())){
-            c.add(Calendar.DATE, 1);
-
-        }
-
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),pendingIntent);
-    }
 }
