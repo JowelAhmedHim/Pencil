@@ -6,16 +6,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,36 +31,37 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Chronometer;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.OnColorSelectedListener;
+import com.flask.colorpicker.builder.ColorPickerClickListener;
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
-public class AddNoteActivity extends AppCompatActivity {
-
-
-    private RelativeLayout relativeLayout;
-    private ImageView noteImageIv;
-
-    private Toolbar toolbar;
-    private BottomNavigationView navigationView;
-    private BottomSheetDialog bottomSheetDialog;
-
-    private ProgressDialog progressDialog;
-
-    private String[] cameraPermission;
-    private String[] storagePermission;
-    private String[] recordingPermission;
+public class AddNoteActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener,TimePickerDialog.OnTimeSetListener {
 
     private static final int CAMERA_REQUEST_CODE = 200;
     private static final int STORAGE_REQUEST_CODE = 300;
@@ -62,11 +69,37 @@ public class AddNoteActivity extends AppCompatActivity {
     private static final int IMAGE_PICK_CAMERA_CODE = 500;
     private static final int RECORD_AUDIO_REQUEST_CODE =600;
 
+
+
+    private String[] cameraPermission;
+    private String[] storagePermission;
+    private String[] recordingPermission;
+
+
+    private RelativeLayout relativeLayout;
+    private ImageView noteImage,notePaint;
+    private ImageButton noteBackBtn,noteSaveBtn,noteAlertBtn;
+    private TextView noteTime,alertTime;
+    private EditText noteTitle,noteDescription;
+    
+
+    private BottomNavigationView navigationView;
+    private BottomSheetDialog bottomSheetDialog;
+
+    
+    private Spinner spinner;
+    private ProgressDialog progressDialog;
+
+
+  
+
     private Uri imageUri;
     private String selectedImagePath;
 
     private MediaRecorder mediaRecorder;
     private boolean isRecording = false;
+
+    private int colorBackground;
 
 
 
@@ -74,27 +107,31 @@ public class AddNoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
-
-        //toolbar setup
-        toolbar  = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Add Note");
+        
+        //initially add note background color white
+        colorBackground = Color.WHITE;
+        
 
         //progress dialog setup
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setCanceledOnTouchOutside(false);
+        
 
+        //initiate view and permission
         init();
         initPermission();
-
-        if (getIntent().hasExtra("image")){
-            Bitmap b = BitmapFactory.decodeByteArray(
-                    getIntent().getByteArrayExtra("image"),0,getIntent()
-                            .getByteArrayExtra("image").length);
-            Toast.makeText(this, "Successfully get intent", Toast.LENGTH_SHORT).show();
-            noteImageIv.setImageBitmap(b);
-        }
+        
+        //add listener
+        noteBackBtn.setOnClickListener(this);
+        noteSaveBtn.setOnClickListener(this);
+        noteAlertBtn.setOnClickListener(this);
+        noteTime.setOnClickListener(this);
+        
+        
+        //getPaintImageFromIntent
+        getPaintImage();
+      
 
 
 
@@ -120,22 +157,85 @@ public class AddNoteActivity extends AppCompatActivity {
                     case R.id.addVoice:
                         showBottomSheetDialog();
                         return true;
+                    case R.id.addColor:
+                        showBackgroundColorPicker();
+                        return true;
                 }
                 return false;
             }
         });
 
     }
-    private void init() {
-        relativeLayout = findViewById(R.id.addNoteBackground);
-        noteImageIv = findViewById(R.id.noteImage);
+
+    private void getPaintImage() {
+        if (getIntent().hasExtra("image")){
+            Bitmap b = BitmapFactory.decodeByteArray(
+                    getIntent().getByteArrayExtra("image"),0,getIntent()
+                            .getByteArrayExtra("image").length);
+            Toast.makeText(this, "Successfully get intent", Toast.LENGTH_SHORT).show();
+            notePaint.setImageBitmap(b);
+        }
     }
 
+    private void init() {
+        relativeLayout = findViewById(R.id.addNoteBackground);
+        noteBackBtn = findViewById(R.id.noteBack_btn);
+        noteAlertBtn = findViewById(R.id.noteAlert_btn);
+        noteSaveBtn = findViewById(R.id.noteSave_btn);
+        alertTime = findViewById(R.id.alertTimer);
+        noteTime = findViewById(R.id.noteTime);
+        noteTitle = findViewById(R.id.noteTitle);
+        noteDescription = findViewById(R.id.noteDescription);
+        noteImage = findViewById(R.id.noteImage);
+        notePaint = findViewById(R.id.notePaint);
+        spinner = findViewById(R.id.spinner);
+        List<String> categories = new ArrayList<String>();
+        categories.add("Home");
+        categories.add("Work");
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,categories);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(arrayAdapter);
 
+    }
+    
     private void initPermission() {
         cameraPermission = new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
         recordingPermission = new String[]{Manifest.permission.RECORD_AUDIO};
+    }
+
+    private void showBackgroundColorPicker(){
+
+        int color = colorBackground;
+        ColorPickerDialogBuilder
+                .with(this)
+                .setTitle("Choose color")
+                .initialColor(color)
+                .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
+                .density(12)
+                .setOnColorSelectedListener(new OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(int selectedColor) {
+                        Toast.makeText(AddNoteActivity.this, "onColorSelected: 0x"+ Integer.toHexString(selectedColor), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setPositiveButton("ok", new ColorPickerClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
+
+                            colorBackground = selectedColor;
+                            relativeLayout.setBackgroundColor(colorBackground);
+
+                    }
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .build()
+                .show();
+
     }
 
     //function of image taking note
@@ -266,7 +366,6 @@ public class AddNoteActivity extends AppCompatActivity {
         bottomSheetDialog.dismiss();
     }
 
-
     //checking all permission & request permission
     private boolean checkCameraPermission(){
         boolean result = ContextCompat.checkSelfPermission(this,
@@ -297,20 +396,9 @@ public class AddNoteActivity extends AppCompatActivity {
     }
 
 
+    
 
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.addnote_menu,menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
+  
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -370,7 +458,7 @@ public class AddNoteActivity extends AppCompatActivity {
                        try {
                            InputStream inputStream = getContentResolver().openInputStream(selectedImage);
                            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                           noteImageIv.setImageBitmap(bitmap);
+                           noteImage.setImageBitmap(bitmap);
                            selectedImagePath =getPathFromUri(selectedImage);
 
                        } catch (FileNotFoundException e) {
@@ -382,7 +470,7 @@ public class AddNoteActivity extends AppCompatActivity {
             }else if (requestCode== IMAGE_PICK_CAMERA_CODE){
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 if (bitmap != null){
-                    noteImageIv.setImageBitmap(bitmap);
+                    noteImage.setImageBitmap(bitmap);
                 }
 
             }
@@ -404,6 +492,77 @@ public class AddNoteActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String item = parent.getItemAtPosition(position).toString();
+        // Showing selected spinner item
+        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.noteBack_btn:
+                onBackPressed();
+                break; 
+            case R.id.noteAlert_btn:
+                showTimePicker();
+                break;
+        }
+        
+    }
+
+    private void showTimePicker() {
 
 
+        DialogFragment timePicker = new TimePickerFragment();
+        timePicker.show(getSupportFragmentManager(),"time picker");
+
+
+      /*  Calendar currentTime = Calendar.getInstance();
+        int hour = currentTime.get(Calendar.HOUR_OF_DAY);
+        int minute = currentTime.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(AddNoteActivity.this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                alertTime.setText(hourOfDay+":"+ minute);
+            }
+        },hour,minute,true);
+        timePickerDialog.show();*/
+    }
+
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        c.set(Calendar.MINUTE, minute);
+        c.set(Calendar.SECOND, 0);
+        updateTimeText(c);
+        startAlarm(c);
+
+    }
+
+    private void updateTimeText(Calendar c) {
+        String timeSet = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
+        alertTime.setText(timeSet);
+    }
+
+    private void startAlarm(Calendar c) {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
+        if (c.before(Calendar.getInstance())){
+            c.add(Calendar.DATE, 1);
+
+        }
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),pendingIntent);
+    }
 }

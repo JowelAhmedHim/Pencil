@@ -7,55 +7,121 @@
     android:layout_height="match_parent"
     tools:context=".AddNoteActivity">
 
-    <androidx.appcompat.widget.Toolbar
+    <RelativeLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        android:layout_height="?actionBarSize"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+        <ImageButton
+            android:id="@+id/noteBack_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_baseline_arrow_back_24"
+            android:background="@null"/>
+        <ImageButton
+            android:id="@+id/noteSave_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_baseline_save_alt_24"
+            android:background="@null"/>
+        <ImageButton
+            android:id="@+id/noteAlert_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/noteSave_btn"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_baseline_add_alert_24"
+            android:background="@null"/>
+        <TextView
+            android:id="@+id/alertTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/noteAlert_btn"
+            android:text="8:70"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="5dp"/>
 
-    <RelativeLayout
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/dateCategory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
-        android:layout_margin="20dp">
-
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal">
         <TextView
             android:id="@+id/noteTime"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="17/4/21 4:50"
+            android:padding="5dp"
             android:textColor="@color/black"
             android:fontFamily="serif"/>
-        <EditText
-            android:id="@+id/noteTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/noteTime"
-            android:hint="Note Title"
-            android:maxLines="1"
-            android:inputType="text"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:fontFamily="serif"/>
-        <ImageView
-            android:id="@+id/noteImage"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_below="@+id/noteTitle"
-            android:src="@mipmap/ic_launcher"
-            android:scaleType="centerCrop"/>
-        <EditText
-            android:id="@+id/noteDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/noteImage"
-            android:hint="Write your note here"
-            android:minHeight="200dp"/>
 
-    </RelativeLayout>
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="5dp"/>
+
+    </LinearLayout>
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dateCategory">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+            <EditText
+                android:id="@+id/noteTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Note Title"
+                android:maxLines="1"
+                android:inputType="text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:fontFamily="serif"/>
+            <ImageView
+                android:id="@+id/noteImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/noteTitle"
+                android:src="@mipmap/ic_launcher"
+                android:scaleType="centerCrop"/>
+            <ImageView
+                android:id="@+id/notePaint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/noteImage"
+                android:src="@mipmap/ic_launcher"
+                android:scaleType="centerCrop"/>
+            <EditText
+                android:id="@+id/noteDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/noteImage"
+                android:hint="Write your note here"
+                android:minHeight="200dp"/>
+
+        </RelativeLayout>
+
+
+    </ScrollView>
+
+
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
