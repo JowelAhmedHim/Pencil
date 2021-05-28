@@ -1,9 +1,8 @@
-package com.example.pencil;
+package com.example.pencil.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
@@ -13,19 +12,18 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Path;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.pencil.PaintView;
+import com.example.pencil.R;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
@@ -228,7 +226,7 @@ public class PaintActivity extends AppCompatActivity implements BottomNavigation
         bitmap.compress(Bitmap.CompressFormat.PNG, 100,stream);
         byte[] byteArray = stream.toByteArray();
 
-        Intent intent = new Intent(this,AddNoteActivity.class);
+        Intent intent = new Intent(this, AddNoteActivity.class);
         intent.putExtra("image",byteArray);
         startActivity(intent);
         finish();

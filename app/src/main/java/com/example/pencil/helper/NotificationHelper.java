@@ -1,4 +1,4 @@
-package com.example.pencil;
+package com.example.pencil.helper;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.ContextWrapper;
 
 import androidx.core.app.NotificationCompat;
+
+import com.example.pencil.R;
 
 public class NotificationHelper  extends ContextWrapper {
 

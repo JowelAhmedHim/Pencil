@@ -1,15 +1,15 @@
-package com.example.pencil;
+package com.example.pencil.activity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -23,17 +23,14 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.MediaStore;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Chronometer;
@@ -46,6 +43,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.pencil.broadcastReciever.AlertReceiver;
+import com.example.pencil.R;
+import com.example.pencil.database.NoteDatabase;
+import com.example.pencil.entities.Note;
+import com.example.pencil.fragment.TimePickerFragment;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
@@ -133,7 +135,6 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         noteBackBtn.setOnClickListener(this);
         noteSaveBtn.setOnClickListener(this);
         noteAlertBtn.setOnClickListener(this);
-        noteTime.setOnClickListener(this);
         
         
         //getPaintImageFromIntent
@@ -162,7 +163,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
                         showImagePickerDialog();
                         return true;
                     case R.id.addPaint:
-                        Intent intent = new Intent(AddNoteActivity.this,PaintActivity.class);
+                        Intent intent = new Intent(AddNoteActivity.this, PaintActivity.class);
                         startActivity(intent);
                         return true;
 
@@ -177,6 +178,44 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+    }
+
+    private void saveData(){
+        if (noteTitle.getText().toString().trim().isEmpty()){
+            Toast.makeText(this, "Note title can't be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }else  if (noteDescription.getText().toString().trim().isEmpty()){
+            Toast.makeText(this, "Note Description can't be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final Note note = new Note();
+
+        note.setTitle(noteTitle.getText().toString());
+        note.setNoteText(noteDescription.getText().toString());
+        note.setDateTime(noteTime.getText().toString());
+
+
+        @SuppressLint("StaticFieldLeak")
+        class SaveNoteTask extends AsyncTask<Void,Void,Void>{
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                NoteDatabase.getNoteDatabase(getApplicationContext()).noteDao().insertNote(note);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+                Intent intent = new Intent();
+                setResult(RESULT_OK,intent);
+                finish();
+            }
+        }
+
+        new SaveNoteTask().execute();
     }
 
 
@@ -202,7 +241,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void getPresentTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd_hh:mm", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMMM yyyy HH:mm a", Locale.getDefault());
         currentDateAndTime = sdf.format(new Date());
         noteTime.setText(currentDateAndTime);
     }
@@ -238,6 +277,23 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         cameraPermission = new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
         recordingPermission = new String[]{Manifest.permission.RECORD_AUDIO};
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.noteBack_btn:
+                onBackPressed();
+                break;
+            case R.id.noteAlert_btn:
+                showTimePicker();
+                break;
+            case R.id.noteSave_btn:
+                saveData();
+                break;
+        }
+
     }
 
 
@@ -291,8 +347,6 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
                 bottomSheetFontDialog.dismiss();
             }
         });
-
-
         amatic = bottomSheetFontDialog.findViewById(R.id.amatic);
         pacific = bottomSheetFontDialog.findViewById(R.id.pacific);
         roboto = bottomSheetFontDialog.findViewById(R.id.roboto);
@@ -308,7 +362,6 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
 
             }
         });
-
         pacific.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -676,18 +729,6 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
 
 
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.noteBack_btn:
-                onBackPressed();
-                break; 
-            case R.id.noteAlert_btn:
-                showTimePicker();
-                break;
-        }
-        
-    }
 
 
 

@@ -14,17 +14,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Pencil"
         android:windowSoftInputMode="stateVisible">
-        <activity android:name=".PaintActivity"></activity>
-        <activity android:name=".AddNoteActivity"
+        <activity android:name=".activity.PaintActivity"></activity>
+        <activity android:name=".activity.AddNoteActivity"
            />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".AlertReceiver"/>
+        <receiver android:name=".broadcastReciever.AlertReceiver"/>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.example.pencil;
+package com.example.pencil.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -9,27 +9,36 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import com.example.pencil.database.NoteDatabase;
+import com.example.pencil.entities.Note;
+import com.example.pencil.fragment.NotesFragment;
+import com.example.pencil.R;
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ActionBarDrawerToggle toggle;
+    Fragment fragment = null;
+
+    private RecyclerView recyclerView;
 
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -37,8 +46,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //FIND VIEW
-        navigationView = findViewById(R.id.navView);
         drawerLayout = findViewById(R.id.drawerLayout);
+        navigationView = findViewById(R.id.navView);
+        navigationView.setNavigationItemSelectedListener(this);
 
 
         //setup toggle to display hamburger icon with nice animation
@@ -47,31 +57,12 @@ public class MainActivity extends AppCompatActivity {
         toggle.syncState();
         toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.white));
 
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame,new NotesFragment()).commit();
+        navigationView.setCheckedItem(R.id.notes);
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                displaySelectedScreen(item.getItemId());
-                return true;
-
-            }
-        });
-
-        displaySelectedScreen(R.id.notes);
 
     }
 
-    private void displaySelectedScreen(int itemId) {
-        Fragment fragment = null;
-        switch (itemId)
-        {
-            case R.id.notes:
-                fragment = new NotesFragment();
-                loadFragment(fragment);
-                break;
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -83,14 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void loadFragment(Fragment fragment){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction =  fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame,fragment).commit();
-        drawerLayout.closeDrawer(GravityCompat.START);
-        fragmentTransaction.addToBackStack(null);
 
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -98,4 +82,26 @@ public class MainActivity extends AppCompatActivity {
         menuInflater.inflate(R.menu.main_topmenu,menu);
         return super.onCreateOptionsMenu(menu);
     }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case R.id.notes:
+                fragment = new NotesFragment();
+                loadFragment(fragment);
+                break;
+        }
+        return false;
+    }
+    private void loadFragment(Fragment fragment) {
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame, fragment).commit();
+        drawerLayout.closeDrawer(GravityCompat.START);
+        fragmentTransaction.addToBackStack(null);
+    }
+
 }

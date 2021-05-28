@@ -1,10 +1,12 @@
-package com.example.pencil;
+package com.example.pencil.broadcastReciever;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
 import androidx.core.app.NotificationCompat;
+
+import com.example.pencil.helper.NotificationHelper;
 
 public class AlertReceiver extends BroadcastReceiver {
     @Override

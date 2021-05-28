@@ -6,12 +6,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#FFFFFF"
     app:layout_behavior="@string/fab_transformation_scrim_behavior"
-    tools:context=".NotesFragment">
+    tools:context=".fragment.NotesFragment">
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
 
         <EditText
             android:id="@+id/searchNote"
@@ -34,34 +35,8 @@
             app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
             tools:listitem="@layout/note_rv_item" />
 
-        <TextView
-            android:id="@+id/emptyDesign"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="No Attachment"
-            android:textSize="40dp"
-            android:visibility="visible" />
     </RelativeLayout>
 
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottomAppbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:backgroundTint="#FFFFFF"
-        app:fabCradleMargin="20dp"
-        app:fabCradleVerticalOffset="10dp"
-        app:fabCradleRoundedCornerRadius="20dp">
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomNavMenu"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            app:menu="@menu/bottom_nav_menu"
-            android:layout_marginRight="16dp"/>
-    </com.google.android.material.bottomappbar.BottomAppBar>
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -69,7 +44,6 @@
         android:id="@+id/fabButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_anchor="@id/bottomAppbar"
         android:backgroundTint="#FF9800"
         android:src="@drawable/ic_baseline_add_24"
         app:tint="@color/white"
