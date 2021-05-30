@@ -102,20 +102,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_below="@+id/noteTitle"
+                android:visibility="gone"
                 android:src="@mipmap/ic_launcher"
                 android:scaleType="fitXY"/>
-            <ImageView
-                android:id="@+id/notePaint"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_below="@+id/noteImage"
-                android:src="@mipmap/ic_launcher"
-                android:scaleType="fitXY"/>
+
             <EditText
                 android:id="@+id/noteDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/notePaint"
+                android:layout_below="@+id/noteImage"
                 android:hint="Write your note here"
                 android:background="@null"
                 android:minHeight="100dp"

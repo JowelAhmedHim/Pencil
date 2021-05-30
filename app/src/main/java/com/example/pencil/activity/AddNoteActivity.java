@@ -29,6 +29,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -55,6 +56,8 @@ import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.DateFormat;
@@ -102,7 +105,9 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
     private  String currentDateAndTime;
     private String noteCategory;
     private Uri imageUri;
-    private String selectedImagePath;
+
+    private String selectedImagePath ;
+
     private Bitmap paintBtm;
 
     private MediaRecorder mediaRecorder;
@@ -130,6 +135,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         //initiate view and permission
         init();
         initPermission();
+        selectedImagePath = null;
         
         //add listener
         noteBackBtn.setOnClickListener(this);
@@ -146,7 +152,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
          getCategory();
 
 
-        selectedImagePath = "";
+
 
 
         //bottom navigation view setup
@@ -180,43 +186,6 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    private void saveData(){
-        if (noteTitle.getText().toString().trim().isEmpty()){
-            Toast.makeText(this, "Note title can't be empty", Toast.LENGTH_SHORT).show();
-            return;
-        }else  if (noteDescription.getText().toString().trim().isEmpty()){
-            Toast.makeText(this, "Note Description can't be empty", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        final Note note = new Note();
-
-        note.setTitle(noteTitle.getText().toString());
-        note.setNoteText(noteDescription.getText().toString());
-        note.setDateTime(noteTime.getText().toString());
-
-
-        @SuppressLint("StaticFieldLeak")
-        class SaveNoteTask extends AsyncTask<Void,Void,Void>{
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                NoteDatabase.getNoteDatabase(getApplicationContext()).noteDao().insertNote(note);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-
-                Intent intent = new Intent();
-                setResult(RESULT_OK,intent);
-                finish();
-            }
-        }
-
-        new SaveNoteTask().execute();
-    }
 
 
     private void getCategory() {
@@ -267,7 +236,6 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         noteTitle = findViewById(R.id.noteTitle);
         noteDescription = findViewById(R.id.noteDescription);
         noteImage = findViewById(R.id.noteImage);
-        notePaint = findViewById(R.id.notePaint);
         spinner = findViewById(R.id.spinner);
 
 
@@ -295,6 +263,46 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         }
 
     }
+
+    private void saveData(){
+        if (noteTitle.getText().toString().trim().isEmpty()){
+            Toast.makeText(this, "Note title can't be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }else  if (noteDescription.getText().toString().trim().isEmpty()){
+            Toast.makeText(this, "Note Description can't be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final Note note = new Note();
+
+        note.setTitle(noteTitle.getText().toString());
+        note.setNoteText(noteDescription.getText().toString());
+        note.setDateTime(noteTime.getText().toString());
+        note.setImagePath(selectedImagePath);
+
+
+        @SuppressLint("StaticFieldLeak")
+        class SaveNoteTask extends AsyncTask<Void,Void,Void>{
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                NoteDatabase.getNoteDatabase(getApplicationContext()).noteDao().insertNote(note);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+                Intent intent = new Intent();
+                setResult(RESULT_OK,intent);
+                finish();
+            }
+        }
+
+        new SaveNoteTask().execute();
+    }
+
 
 
     //font functionality
@@ -612,12 +620,12 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         ActivityCompat.requestPermissions(this,cameraPermission,CAMERA_REQUEST_CODE);
     }
     private boolean checkStoragePermission(){
-        boolean result1 = ContextCompat.checkSelfPermission(this,
+        boolean result = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)==(PackageManager.PERMISSION_GRANTED);
-        return result1;
+        return result;
     }
     private void requestStoragePermission(){
-        ActivityCompat.requestPermissions(this,storagePermission,CAMERA_REQUEST_CODE);
+        ActivityCompat.requestPermissions(this,storagePermission,STORAGE_REQUEST_CODE);
     }
     private boolean checkAudioRecordPermission() {
 
@@ -694,8 +702,8 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
                            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                            noteImage.setImageBitmap(bitmap);
                            noteImage.setVisibility(View.VISIBLE);
-                           selectedImagePath =getPathFromUri(selectedImage);
-
+                           selectedImagePath = getPathFromUri(selectedImage);
+                           Toast.makeText(this, "File path"+selectedImagePath, Toast.LENGTH_SHORT).show();
                        } catch (FileNotFoundException e) {
                            e.printStackTrace();
                        }
@@ -707,12 +715,25 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
                 if (bitmap != null){
                     noteImage.setImageBitmap(bitmap);
                     noteImage.setVisibility(View.VISIBLE);
+                    Uri uri = getImageUri(getApplicationContext(),bitmap);
+                    selectedImagePath = getPathFromUri(uri);
                 }
-
+            }else {
+                selectedImagePath = null;
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    private Uri getImageUri(Context applicationContext, Bitmap bitmap) {
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+        String path = MediaStore.Images.Media.insertImage(applicationContext.getContentResolver(),bitmap,"Title",null);
+        return Uri.parse(path);
+    }
+
+
     private String getPathFromUri (Uri contentUrl){
         String filePath;
         Cursor cursor = getContentResolver().query(contentUrl,null,null,null,null);
@@ -726,10 +747,6 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         }
         return filePath;
     }
-
-
-
-
-
+    
 
 }

@@ -1,12 +1,17 @@
 package com.example.pencil.adapter;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -54,6 +59,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     class NoteViewHolder extends RecyclerView.ViewHolder {
 
         TextView noteTitle, noteDateTime, noteDes;
+        ImageView noteImage;
 
         public NoteViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -61,6 +67,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             noteTitle = itemView.findViewById(R.id.titleNote);
             noteDateTime = itemView.findViewById(R.id.timeNote);
             noteDes = itemView.findViewById(R.id.descriptionNote);
+            noteImage = itemView.findViewById(R.id.imageNote);
+
 
 
         }
@@ -69,6 +77,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             noteTitle.setText(note.getTitle());
             noteDateTime.setText(note.getDateTime());
             noteDes.setText(note.getNoteText());
+            if (note.getImagePath() == null){
+                noteImage.setVisibility(View.GONE);
+            }else {
+
+                noteImage.setImageBitmap(BitmapFactory.decodeFile(note.getImagePath()));
+                noteImage.setVisibility(View.VISIBLE);
+            }
 
 
         }
