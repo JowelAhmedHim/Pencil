@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/addNoteBackground"
+    android:id="@+id/relativeLayoutLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.AddNoteActivity">
@@ -27,13 +27,23 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_baseline_save_alt_24"
-            android:background="@null"/>
+            android:background="@null"
+            android:src="@drawable/ic_baseline_save_alt_24"/>
+        <ImageView
+            android:id="@+id/noteDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_delete_24"
+            android:layout_toStartOf="@+id/noteSave_btn"
+            android:layout_marginRight="10dp"
+            android:layout_centerInParent="true"
+            android:background="@null"
+            android:visibility="gone"/>
         <ImageButton
             android:id="@+id/noteAlert_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/noteSave_btn"
+            android:layout_toStartOf="@+id/noteDelete"
             android:layout_centerInParent="true"
             android:layout_marginRight="10dp"
             android:src="@drawable/ic_baseline_add_alert_24"
@@ -43,9 +53,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toStartOf="@+id/noteAlert_btn"
-            android:text="8:70"
+            android:text=""
             android:layout_centerInParent="true"
             android:layout_marginRight="5dp"/>
+
 
     </RelativeLayout>
     <LinearLayout
@@ -62,16 +73,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="17/4/21 4:50"
-            android:padding="5dp"
+            android:padding="10dp"
             android:textColor="@color/black"
-            android:fontFamily="serif"/>
-
+            android:fontFamily="@font/poppinsregular"/>
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:padding="5dp"/>
-
     </LinearLayout>
     <ScrollView
         android:id="@+id/scrollView"
@@ -90,31 +99,74 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Note Title"
+                android:padding="10dp"
                 android:maxLines="1"
                 android:inputType="text"
                 android:background="@null"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                android:fontFamily="serif"/>
-            <ImageView
-                android:id="@+id/noteImage"
+                android:fontFamily="@font/poppinsregular"/>
+            <RelativeLayout
+                android:id="@+id/imageLayout"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/noteTitle"
-                android:visibility="gone"
-                android:src="@mipmap/ic_launcher"
-                android:scaleType="fitXY"/>
+                android:layout_margin="10dp">
+                <ImageView
+                    android:id="@+id/noteImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:src="@mipmap/ic_launcher"
+                    android:scaleType="fitXY"
+                    android:visibility="gone"/>
+                <ImageView
+                    android:id="@+id/deleteImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_delete_24"
+                    android:layout_alignParentEnd="true"
+                    android:padding="20dp"
+                    app:tint="@color/orange"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/audioFileLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/noteDescription"
+                android:visibility="gone">
 
+                <ImageView
+                    android:id="@+id/audioIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/ic_baseline_play_circle_24"/>
+                <TextView
+                    android:id="@+id/fileName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@+id/audioDelete"
+                    android:layout_toEndOf="@+id/audioIcon"
+                    android:text="adakdadhadh"/>
+                <ImageView
+                    android:id="@+id/audioDelete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_baseline_delete_24"/>
+            </RelativeLayout>
             <EditText
                 android:id="@+id/noteDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/noteImage"
+                android:layout_below="@+id/imageLayout"
                 android:hint="Write your note here"
+                android:fontFamily="@font/poppinsregular"
+                android:padding="10dp"
                 android:background="@null"
-                android:minHeight="100dp"
-              />
+                android:minHeight="100dp"/>
 
         </RelativeLayout>
 

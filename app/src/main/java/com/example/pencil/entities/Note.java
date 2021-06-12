@@ -20,8 +20,19 @@ public class Note implements Serializable {
     private String noteText;
     @ColumnInfo(name = "image_path")
     private String imagePath;
-    @ColumnInfo(name = "color")
-    private String color;
+    @ColumnInfo(name = "audioPath")
+    private String audioPath;
+    @ColumnInfo(name = "fontColor")
+    private String fontColor;
+    @ColumnInfo(name = "fontState")
+    private String fontState;
+    @ColumnInfo(name = "fontFamily")
+    private String fontFamily;
+    @ColumnInfo(name = "alarmTime")
+    private String alarmTime;
+    @ColumnInfo(name = "noteBgColor")
+    private String noteBgColor;
+
 
     public int getId() {
         return id;
@@ -63,12 +74,53 @@ public class Note implements Serializable {
         this.imagePath = imagePath;
     }
 
-    public String getColor() {
-        return color;
+    public String getFontState() {
+        return fontState;
     }
 
-    public void setColor(String color) {
-        this.color = color;
+    public void setFontState(String fontState) {
+        this.fontState = fontState;
+    }
+
+    public String getFontFamily() {
+        return fontFamily;
+    }
+
+    public void setFontFamily(String fontFamily) {
+        this.fontFamily = fontFamily;
+    }
+
+    public String getAlarmTime() {
+        return alarmTime;
+    }
+
+    public void setAlarmTime(String alarmTime) {
+        this.alarmTime = alarmTime;
+    }
+
+
+    public String getAudioPath() {
+        return audioPath;
+    }
+
+    public void setAudioPath(String audioPath) {
+        this.audioPath = audioPath;
+    }
+
+    public String getNoteBgColor() {
+        return noteBgColor;
+    }
+
+    public void setNoteBgColor(String noteBgColor) {
+        this.noteBgColor = noteBgColor;
+    }
+
+    public String getFontColor() {
+        return fontColor;
+    }
+
+    public void setFontColor(String fontColor) {
+        this.fontColor = fontColor;
     }
 
     @NonNull

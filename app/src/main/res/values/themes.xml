@@ -20,7 +20,7 @@
     <style name="popupOverly" parent="ThemeOverlay.AppCompat.Light"></style>
 
     <style name="TextViewStyle" parent="Widget.AppCompat.TextView">
-        <item name="fontFamily">serif</item>
+        <item name="fontFamily">@font/poppinsregular</item>
         <item name="android:textSize">14sp</item>
     </style>
 

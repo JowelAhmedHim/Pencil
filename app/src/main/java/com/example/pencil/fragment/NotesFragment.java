@@ -23,6 +23,7 @@ import com.example.pencil.R;
 import com.example.pencil.adapter.NotesAdapter;
 import com.example.pencil.database.NoteDatabase;
 import com.example.pencil.entities.Note;
+import com.example.pencil.listeners.NotesListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -30,9 +31,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class NotesFragment extends Fragment {
+public class NotesFragment extends Fragment implements NotesListener {
 
     private static final int REQUEST_ADD_NOTE = 100;
+    private static final int REQUEST_UPDATE_NOTE = 200;
+    private static final int REQUEST_SHOW_NOTE = 300;
 
     private BottomNavigationView navigationView;
     private FloatingActionButton fab;
@@ -41,6 +44,8 @@ public class NotesFragment extends Fragment {
     private List<Note> noteList;
     private NotesAdapter notesAdapter;
     private TextView emptyDesign;
+
+    private int moteClickedPosition = -1;
 
 
     public NotesFragment() {
@@ -68,10 +73,10 @@ public class NotesFragment extends Fragment {
         recyclerView = view.findViewById(R.id.noteRecyclerView);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         noteList = new ArrayList<>();
-        notesAdapter = new NotesAdapter(noteList);
+        notesAdapter = new NotesAdapter(noteList,this);
         recyclerView.setAdapter(notesAdapter);
 
-        getNotes();
+        getNotes(REQUEST_SHOW_NOTE,false);
 
 
 
@@ -86,7 +91,7 @@ public class NotesFragment extends Fragment {
         });
     }
 
-    private void getNotes(){
+    private void getNotes(final int requestCode,final boolean isNoteDeleted){
         class  GetNoteTask extends AsyncTask<Void,Void, List<Note>> {
 
             @Override
@@ -99,16 +104,25 @@ public class NotesFragment extends Fragment {
             @Override
             protected void onPostExecute(List<Note> notes) {
                 super.onPostExecute(notes);
-                if (noteList.size() == 0){
+                if (requestCode == REQUEST_SHOW_NOTE){
                     noteList.addAll(notes);
                     notesAdapter.notifyDataSetChanged();
-
-                }else {
+                }else if (requestCode == REQUEST_ADD_NOTE){
                     noteList.add(0,notes.get(0));
                     notesAdapter.notifyItemInserted(0);
+                    recyclerView.smoothScrollToPosition(0);
+                }else  if (requestCode == REQUEST_UPDATE_NOTE){
+                    noteList.remove(moteClickedPosition);
 
+                    if (isNoteDeleted){
+                        notesAdapter.notifyItemRemoved(moteClickedPosition);
+                    }else {
+
+                        noteList.add(moteClickedPosition,notes.get(moteClickedPosition));
+                        notesAdapter.notifyItemChanged(moteClickedPosition);
+
+                    }
                 }
-                recyclerView.smoothScrollToPosition(0);
             }
         }
         new GetNoteTask().execute();
@@ -118,13 +132,28 @@ public class NotesFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == AddNoteActivity.RESULT_OK){
+        if (resultCode == AddNoteActivity.RESULT_OK ){
             if (requestCode == REQUEST_ADD_NOTE){
-                getNotes();
+                getNotes(REQUEST_ADD_NOTE,false);
+            }else if (requestCode== REQUEST_UPDATE_NOTE ){
+                if (data!=null){
+                    getNotes(REQUEST_UPDATE_NOTE,data.getBooleanExtra("isNoteDeleted",false));
+                }
             }
         }
 
 
+
+    }
+
+    @Override
+    public void onNoteClicked(Note note, int position) {
+
+        moteClickedPosition = position;
+        Intent intent = new Intent(getActivity(),AddNoteActivity.class);
+        intent.putExtra("isViewOrUpdate",true);
+        intent.putExtra("note",note);
+        startActivityForResult(intent,REQUEST_UPDATE_NOTE);
 
     }
 }

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="20dp"
+    android:background="@color/white"
+    android:id="@+id/deleteNoteContainer"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete Note ?"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:fontFamily="@font/poppinsregular"/>
+        <TextView
+            android:id="@+id/dialog_sub_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deleting note is permanent"
+            android:layout_below="@+id/dialog_title" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dialog_sub_title"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:id="@+id/dialog_delete_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete"
+                android:backgroundTint="@color/orange"
+                android:layout_alignParentEnd="true"/>
+            <Button
+                android:id="@+id/dialog_cancel_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/dialog_delete_btn"
+                android:layout_marginRight="20dp"
+                android:backgroundTint="@color/white"
+                android:text="Cancel"
+                android:textColor="@color/black"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
