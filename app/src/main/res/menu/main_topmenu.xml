@@ -3,9 +3,5 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="search"
-        android:icon="@drawable/ic_baseline_search_24"
-        app:showAsAction="always"/>
-    <item
         android:title="about"/>
 </menu>

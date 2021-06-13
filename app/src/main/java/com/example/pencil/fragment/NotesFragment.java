@@ -10,11 +10,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +47,7 @@ public class NotesFragment extends Fragment implements NotesListener {
     private List<Note> noteList;
     private NotesAdapter notesAdapter;
     private TextView emptyDesign;
+    private EditText searchNote;
 
     private int moteClickedPosition = -1;
 
@@ -67,9 +71,6 @@ public class NotesFragment extends Fragment implements NotesListener {
         super.onViewCreated(view, savedInstanceState);
 
 
-
-
-
         recyclerView = view.findViewById(R.id.noteRecyclerView);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         noteList = new ArrayList<>();
@@ -78,15 +79,32 @@ public class NotesFragment extends Fragment implements NotesListener {
 
         getNotes(REQUEST_SHOW_NOTE,false);
 
-
-
-
         fab = view.findViewById(R.id.fabButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), AddNoteActivity.class);
                 startActivityForResult(intent,REQUEST_ADD_NOTE);
+            }
+        });
+
+        searchNote = view.findViewById(R.id.searchNote);
+        searchNote.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                  notesAdapter.cancelTimer();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (noteList.size()!=0){
+                    notesAdapter.searchNotes(s.toString());
+                }
             }
         });
     }

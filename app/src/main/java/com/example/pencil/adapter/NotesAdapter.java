@@ -1,10 +1,13 @@
 package com.example.pencil.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -13,6 +16,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -31,19 +36,22 @@ import com.example.pencil.listeners.NotesListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
 
 
     private List<Note> notes;
     private NotesListener notesListener;
-
-
+    private List<Note> newList;
+    private Timer timer;
 
 
     public NotesAdapter(List<Note> notes,NotesListener notesListener) {
         this.notes = notes;
         this.notesListener = notesListener;
+        newList = notes;
     }
 
     @NonNull
@@ -79,6 +87,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     public int getItemViewType(int position) {
         return position;
     }
+
 
     class NoteViewHolder extends RecyclerView.ViewHolder {
 
@@ -125,6 +134,42 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
                 audioFileIcon.setVisibility(View.VISIBLE);
             }
 
+        }
+    }
+
+    public void searchNotes(final  String searchKeyword){
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (searchKeyword.trim().isEmpty()){
+                    notes = newList;
+                }else {
+                    ArrayList<Note> temp = new ArrayList<>();
+                    for (Note note: newList){
+                        if (note.getTitle().toLowerCase().contains(searchKeyword.toLowerCase())
+                        || note.getNoteText().toLowerCase().contains(searchKeyword.toLowerCase()))
+                        {
+                            temp.add(note);
+                        }
+                    }
+                    notes = temp;
+                }
+
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
+
+            }
+        },300);
+    }
+
+    public void cancelTimer(){
+        if (timer!=null){
+            timer.cancel();
         }
     }
 }
