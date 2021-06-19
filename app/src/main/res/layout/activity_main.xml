@@ -22,7 +22,8 @@
         app:headerLayout="@layout/nav_header"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:itemIconTint="@color/black"
+        app:itemIconTint="@color/grey_90"
+        app:itemTextColor="@color/grey_90"
         app:itemHorizontalPadding="20dp"/>
 
 

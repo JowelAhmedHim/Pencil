@@ -32,6 +32,12 @@ public class Note implements Serializable {
     private String alarmTime;
     @ColumnInfo(name = "noteBgColor")
     private String noteBgColor;
+    @ColumnInfo(name = "noteProtected")
+    private boolean noteProtected;
+    @ColumnInfo(name = "noteCategory")
+    private String noteCategory;
+
+
 
 
     public int getId() {
@@ -121,6 +127,22 @@ public class Note implements Serializable {
 
     public void setFontColor(String fontColor) {
         this.fontColor = fontColor;
+    }
+
+    public boolean isNoteProtected() {
+        return noteProtected;
+    }
+
+    public void setNoteProtected(boolean noteProtected) {
+        this.noteProtected = noteProtected;
+    }
+
+    public String getNoteCategory() {
+        return noteCategory;
+    }
+
+    public void setNoteCategory(String noteCategory) {
+        this.noteCategory = noteCategory;
     }
 
     @NonNull

@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:src="@drawable/ic_baseline_cancel_24"
-            android:tint="@color/design_default_color_primary"
+            android:tint="@color/orange"
             android:layout_toStartOf="@+id/play_btn"
             android:background="@null"/>
         <ImageButton
@@ -41,29 +41,12 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:src="@drawable/ic_baseline_check_circle_24"
-            android:tint="@color/design_default_color_primary"
+            android:tint="@color/holoGreenLight"
             android:layout_toEndOf="@+id/play_btn"
             android:background="@null"/>
 
 
     </RelativeLayout>
-
-    <com.visualizer.amplitude.AudioRecordView
-        android:id="@+id/audioRecordView"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_below="@+id/playfuction"
-        app:chunkAlignTo="bottom"
-        app:chunkColor="@color/orange"
-        app:chunkMaxHeight="48dp"
-        app:chunkMinHeight="2dp"
-        app:chunkRoundedCorners="true"
-        app:chunkSoftTransition="true"
-        app:chunkSpace="1dp"
-        app:chunkWidth="2dp"
-        app:direction="leftToRight" />
-
-
 
 
 </RelativeLayout>

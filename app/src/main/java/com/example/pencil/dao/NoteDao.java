@@ -17,6 +17,12 @@ public interface NoteDao {
     @Query("SELECT * FROM notes ORDER BY id DESC")
     List<Note> getAllNote();
 
+    @Query("SELECT * FROM notes WHERE alarmTime>0")
+    List<Note> getFavNote();
+
+    @Query("SELECT * FROM notes WHERE noteProtected")
+    List<Note> getProtectedNote();
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertNote(Note note);
 

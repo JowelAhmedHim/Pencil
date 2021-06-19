@@ -2,60 +2,52 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
+        <item
+            android:title="Notes">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/notes"
+                        android:title="All Note"
+                        android:icon="@drawable/ic_baseline_note_24"/>
+                    <item
+                        android:id="@+id/reminders"
+                        android:title="Reminder Notes"
+                        android:icon="@drawable/ic_baseline_add_alert_24"/>
 
-    <item
-        android:title="All Note">
-        <menu>
-            <item
-                android:id="@+id/notes"
-                android:title="Notes"
-                android:icon="@drawable/ic_baseline_note_24"/>
-            <item
-                android:id="@+id/reminders"
-                android:title="Reminders"
-                android:icon="@drawable/ic_baseline_add_alert_24"/>
+                    <item
+                        android:id="@+id/privateNote"
+                        android:title="Private Notes"
+                        android:icon="@drawable/ic_baseline_lock_24"/>
 
-            <item
-                android:id="@+id/privateNote"
-                android:title="Private"
-                android:icon="@drawable/ic_baseline_lock_24"/>
+                </group>
+            </menu>
+        </item>
 
-        </menu>
-    </item>
-    <item
-        android:title="All Note">
-        <menu>
+        <item
+            android:title="App">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/rateUs"
+                        android:title="Rate Us"
+                        android:icon="@drawable/ic_baseline_star_24"/>
+                    <item
+                        android:id="@+id/share"
+                        android:title="Share"
+                        android:icon="@drawable/ic_baseline_share_24"/>
+                    <item
+                        android:id="@+id/setting"
+                        android:title="Setting"
+                        android:icon="@drawable/ic_baseline_settings_24"/>
+                    <item
+                        android:id="@+id/About"
+                        android:title="About"
+                        android:icon="@drawable/ic_baseline_info_24"/>
 
-            <item
-                android:id="@+id/trash"
-                android:title="Trash"
-                android:icon="@drawable/ic_baseline_restore_from_trash_24"/>
-            <item
-                android:id="@+id/setting"
-                android:title="Setting"
-                android:icon="@drawable/ic_baseline_settings_24"/>
+                </group>
 
-        </menu>
-    </item>
-
-
-
-    <item
-        android:title="App">
-        <menu>
-            <item
-                android:id="@+id/rateUs"
-                android:title="Rate Us"
-                android:icon="@drawable/ic_baseline_star_24"/>
-            <item
-                android:id="@+id/share"
-                android:title="Share"
-                android:icon="@drawable/ic_baseline_share_24"/>
-        </menu>
-    </item>
-
-
-
-
+            </menu>
+        </item>
 
 </menu>

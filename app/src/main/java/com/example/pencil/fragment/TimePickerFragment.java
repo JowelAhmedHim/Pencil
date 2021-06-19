@@ -2,6 +2,7 @@ package com.example.pencil.fragment;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,4 +25,5 @@ public class TimePickerFragment extends DialogFragment {
         int minute = c.get(Calendar.MINUTE);
         return new TimePickerDialog(getActivity(),(TimePickerDialog.OnTimeSetListener)getActivity(),hour,minute, DateFormat.is24HourFormat(getActivity()));
     }
+
 }

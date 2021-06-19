@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#FFFFFF"
-    app:layout_behavior="@string/fab_transformation_scrim_behavior"
-    tools:context=".fragment.NotesFragment">
+    tools:context=".fragment.ProtectedFragment">
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
@@ -17,7 +15,6 @@
             android:id="@+id/searchNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/filter"
             android:layout_margin="10dp"
             android:background="@drawable/rectacgle1"
             android:drawableStart="@drawable/ic_baseline_search_24"
@@ -25,24 +22,13 @@
             android:hint="search"
             android:inputType="text"
             android:padding="10dp" />
-        <ImageButton
-            android:id="@+id/filter"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:background="@null"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_baseline_filter_list_24"/>
-
         <ImageView
-            android:id="@+id/empty_note_state"
+            android:id="@+id/empty_reminder_state"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/searchNote"
             android:layout_alignParentBottom="true"
-            android:src="@drawable/emptynotes"
+            android:src="@drawable/lockemtynote"
             android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -50,28 +36,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/searchNote"
-            android:layout_alignParentBottom="true"
             android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
             tools:listitem="@layout/note_rv_item" />
 
     </RelativeLayout>
 
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-
-        android:id="@+id/fabButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FF9800"
-        android:src="@drawable/ic_baseline_add_24"
-        app:tint="@color/white"
-        app:rippleColor="@color/white"
-        android:layout_gravity="bottom|center"
-        android:layout_margin="16dp"/>
-
-
-
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</FrameLayout>

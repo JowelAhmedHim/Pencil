@@ -11,4 +11,15 @@
     <color name="silver">#8C8989</color>
     <color name="orange">#F44336</color>
     <color name="yellow">#FFC107</color>
+    <color name="holoGreenLight">#00d024</color>
+    <color name="holoRedLight">#ffcccb </color>
+    <color name="holoBlueBright">#33b5e5  </color>
+
+    <color name="grey_10">#e6e6e6</color>
+    <color name="grey_20">#cccccc</color>
+    <color name="grey_40">#999999</color>
+    <color name="grey_90">#4A4B4C</color>
+
+    <color name="icon_tint">@color/grey_90</color>
+    <color name="icon_bg">#FFFFFF</color>
 </resources>
