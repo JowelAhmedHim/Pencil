@@ -163,4 +163,5 @@ public class ReminderFragment extends Fragment implements NotesListener {
 
     }
 
+
 }

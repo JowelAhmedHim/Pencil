@@ -66,16 +66,35 @@
             android:src="@drawable/ic_baseline_add_alert_24"
             android:tint="@color/icon_tint"
             android:background="@null"/>
-        <TextView
-            android:id="@+id/alertTimer"
+
+        <RelativeLayout
+            android:id="@+id/alertTimerLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/alartbg"
-
-            android:layout_toStartOf="@+id/noteAlert_btn"
-            android:text=""
+            android:visibility="gone"
             android:layout_centerInParent="true"
-            android:layout_marginRight="5dp"/>
+            android:layout_toStartOf="@+id/noteAlert_btn">
+
+            <ImageButton
+                android:id="@+id/deleteAlertTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_cancel_24"
+                android:background="@null"/>
+
+            <TextView
+                android:id="@+id/alertTimer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/deleteAlertTime"
+                android:text="4:87"
+                android:padding="2dp"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="5dp"/>
+
+        </RelativeLayout>
+
 
 
 

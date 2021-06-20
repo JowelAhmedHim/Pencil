@@ -63,6 +63,8 @@ public class NotesFragment extends Fragment implements NotesListener {
     }
 
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -226,6 +228,5 @@ public class NotesFragment extends Fragment implements NotesListener {
         intent.putExtra("isViewOrUpdate",true);
         intent.putExtra("note",note);
         startActivityForResult(intent,REQUEST_UPDATE_NOTE);
-
     }
 }

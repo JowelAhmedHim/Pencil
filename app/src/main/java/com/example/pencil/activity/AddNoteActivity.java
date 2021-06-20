@@ -89,17 +89,17 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
     private static final int STORAGE_REQUEST_CODE = 300;
     private static final int IMAGE_PICK_GALLERY_CODE = 400;
     private static final int IMAGE_PICK_CAMERA_CODE = 500;
-    private static final int RECORD_AUDIO_REQUEST_CODE =600;
+    private static final int RECORD_AUDIO_REQUEST_CODE = 600;
     private static final int REQUEST_CODE_SPEECH_TITLE_INPUT = 700;
-    private static final int REQUEST_CODE_SPEECH_DES_INPUT = 700;
+    private static final int REQUEST_CODE_SPEECH_DES_INPUT = 800;
 
     private String[] cameraPermission;
     private String[] storagePermission;
     private String[] recordingPermission;
 
-    private RelativeLayout noteBackgroundColor,noteAudioFileLayout;
+    private RelativeLayout noteBackgroundColor,noteAudioFileLayout,alertTimerLayout;
     private ImageView noteImage,notePaint,deleteImage,deleteNote,audioFileDelete,audioIcon,notePrivacy;
-    private ImageButton noteBackBtn,noteSaveBtn,noteAlertBtn,micTitle,micDes;
+    private ImageButton noteBackBtn,noteSaveBtn,noteAlertBtn,micTitle,micDes,cancelAlert;
     private TextView noteTime,alertTime,audioFileTitle;
     private EditText noteTitle,noteDescription;
 
@@ -147,6 +147,8 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         selectedFontColor = "#000000";
         selectedFontFamily = "a";
         selectedImagePath = null;
+        selectedAlarmTime = null;
+
 
         //progress dialog setup
         progressDialog = new ProgressDialog(this);
@@ -167,6 +169,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         notePrivacy.setOnClickListener(this);
         micTitle.setOnClickListener(this);
         micDes.setOnClickListener(this);
+        cancelAlert.setOnClickListener(this);
 
         //getPaintImageFromIntent
          getPaintImage();
@@ -233,9 +236,54 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         notePrivacy = findViewById(R.id.notePrivacy);
         micTitle = findViewById(R.id.micTitle);
         micDes = findViewById(R.id.micDes);
+        alertTimerLayout = findViewById(R.id.alertTimerLayout);
+        cancelAlert = findViewById(R.id.deleteAlertTime);
 
 
 
+    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+
+            case R.id.micTitle:
+                String s = "title";
+                micFunction(s);
+                break;
+            case R.id.micDes:
+                String s1 = "des";
+                micFunction(s1);
+                break;
+            case R.id.noteBack_btn:
+                onBackPressed();
+                break;
+            case R.id.noteAlert_btn:
+                showTimePicker();
+                break;
+            case R.id.noteSave_btn:
+                saveData();
+                break;
+            case R.id.audioFileLayout:
+                playAudioFile(audioFilePath);
+                break;
+            case R.id.notePrivacy:
+                protectedFunction();
+                break;
+            case R.id.audioDelete:
+                noteAudioDeleted();
+                break;
+            case R.id.deleteAlertTime:
+                selectedAlarmTime = null;
+                alertTimerLayout.setVisibility(View.GONE);
+                break;
+
+            case R.id.deleteImage:
+                noteImage.setImageBitmap(null);
+                noteImage.setVisibility(View.GONE);
+                deleteImage.setVisibility(View.GONE);
+                selectedImagePath = null;
+                break;
+        }
     }
 
     //all permission initialization
@@ -547,46 +595,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
 
-            case R.id.micTitle:
-                String s = "title";
-                micFunction(s);
-                break;
-            case R.id.micDes:
-                 String s1 = "des";
-                 micFunction(s1);
-                 break;
-            case R.id.noteBack_btn:
-                onBackPressed();
-                break;
-            case R.id.noteAlert_btn:
-                showTimePicker();
-                break;
-            case R.id.noteSave_btn:
-                saveData();
-                break;
-            case R.id.audioFileLayout:
-                playAudioFile(audioFilePath);
-                break;
-            case R.id.notePrivacy:
-                protectedFunction();
-                break;
-            case R.id.audioDelete:
-                noteAudioDeleted();
-                break;
-                
-            case R.id.deleteImage:
-                 noteImage.setImageBitmap(null);
-                 noteImage.setVisibility(View.GONE);
-                 deleteImage.setVisibility(View.GONE);
-                 selectedImagePath = null;
-                 break;
-        }
-
-    }
 
     private void micFunction(String s) {
 
@@ -958,6 +967,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
     }
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
         Calendar c = Calendar.getInstance();
         c.set(Calendar.HOUR_OF_DAY, hourOfDay);
         c.set(Calendar.MINUTE, minute);
@@ -968,8 +978,9 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
     }
     private void updateTimeText(Calendar c) {
         selectedAlarmTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
+        alertTimerLayout.setVisibility(View.VISIBLE);
         alertTime.setText(selectedAlarmTime);
-        alertTime.setPadding(20,10,20,10);
+
     }
     private void startAlarm(Calendar c) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);

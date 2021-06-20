@@ -60,7 +60,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //FIND VIEW
         drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navView);
+
         navigationView.setNavigationItemSelectedListener(this);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame,new NotesFragment()).commit();
 
 
         //setup toggle to display hamburger icon with nice animation
@@ -69,7 +72,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
         toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.white));
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame,new NotesFragment()).commit();
+
+
+        if (savedInstanceState == null){
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame,new NotesFragment()).commit();
+            navigationView.setCheckedItem(R.id.notes);
+
+        }
 
     }
 
@@ -85,19 +94,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.main_topmenu,menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -132,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
         }
-        return false;
+        return true;
     }
 
     private void rateFunction() {
@@ -195,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame, fragment).commit();
         drawerLayout.closeDrawer(GravityCompat.START);
-        fragmentTransaction.addToBackStack(null);
     }
 
 }

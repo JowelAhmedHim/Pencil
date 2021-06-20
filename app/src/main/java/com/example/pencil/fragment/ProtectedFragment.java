@@ -168,4 +168,6 @@ public class ProtectedFragment extends Fragment implements NotesListener {
         intent.putExtra("note",note);
         startActivityForResult(intent,REQUEST_UPDATE_NOTE);
     }
+
+
 }

@@ -16,21 +16,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Pencil"
         android:windowSoftInputMode="stateVisible">
-        <activity android:name=".activity.SettingActivity"></activity>
-        <activity android:name=".activity.About" />
-        <activity android:name=".activity.ProtectedNote" />
-        <activity android:name=".activity.LockScreen" />
-        <activity android:name=".activity.PaintActivity" />
-        <activity android:name=".activity.AddNoteActivity" />
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.About" />
+        <activity android:name=".activity.PaintActivity" />
+        <activity android:name=".activity.AddNoteActivity" />
+        <activity android:name=".activity.MainActivity"/>
+
 
         <receiver android:name=".broadcastReciever.AlertReceiver" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
