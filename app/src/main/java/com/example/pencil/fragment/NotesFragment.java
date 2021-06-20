@@ -123,28 +123,10 @@ public class NotesFragment extends Fragment implements NotesListener {
             }
         });
 
-        filterNote = view.findViewById(R.id.filter);
-        filterNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showCategoryDialog();
-            }
-        });
+
     }
 
-    private void showCategoryDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Choose Category:")
-                .setItems(Constants.productOptions1, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String selected = Constants.productOptions1[which];
-                        if(selected.equals("Default")){
 
-                        }
-                    }
-                }).show();
-    }
 
     private void getNotes(final int requestCode,final boolean isNoteDeleted){
         class  GetNoteTask extends AsyncTask<Void,Void, List<Note>> {

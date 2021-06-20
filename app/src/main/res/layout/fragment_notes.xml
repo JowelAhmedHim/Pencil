@@ -17,7 +17,6 @@
             android:id="@+id/searchNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/filter"
             android:layout_margin="10dp"
             android:background="@drawable/rectacgle1"
             android:drawableStart="@drawable/ic_baseline_search_24"
@@ -25,16 +24,6 @@
             android:hint="search"
             android:inputType="text"
             android:padding="10dp" />
-        <ImageButton
-            android:id="@+id/filter"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:background="@null"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_baseline_filter_list_24"/>
 
         <ImageView
             android:id="@+id/empty_note_state"
