@@ -7,9 +7,7 @@
         android:enabled="true"
         app:showAsAction="ifRoom"
         android:title="Text"
-        android:icon="@drawable/ic_baseline_text_fields_24"
-        />
-
+        android:icon="@drawable/ic_baseline_text_fields_24" />
     <item
         android:id="@+id/addImage"
         android:enabled="true"
@@ -21,21 +19,12 @@
         android:enabled="true"
         app:showAsAction="ifRoom"
         android:title="Audio"
-        android:icon="@drawable/ic_baseline_mic_24"
-  />
-    <item
-        android:id="@+id/addPaint"
-        android:enabled="true"
-        app:showAsAction="ifRoom"
-        android:title="Paint"
-        android:icon="@drawable/ic_baseline_draw_24"
-      />
+        android:icon="@drawable/ic_baseline_mic_24" />
     <item
         android:id="@+id/addColor"
         android:enabled="true"
         app:showAsAction="ifRoom"
         android:title="Background"
-        android:icon="@drawable/ic_baseline_format_color_fill_24"
-    />
+        android:icon="@drawable/ic_baseline_format_color_fill_24"/>
 
 </menu>

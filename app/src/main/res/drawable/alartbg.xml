@@ -4,9 +4,9 @@
     <solid
         android:color="@color/icon_bg"/>
     <corners
-        android:radius="10dp"/>
+        android:radius="5dp"/>
     <stroke
-        android:color="@color/grey_90"
+        android:color="@color/grey_40"
         android:width="1dp"/>
 
 </shape>

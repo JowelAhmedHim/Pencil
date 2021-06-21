@@ -98,7 +98,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
     private String[] recordingPermission;
 
     private RelativeLayout noteBackgroundColor,noteAudioFileLayout,alertTimerLayout;
-    private ImageView noteImage,notePaint,deleteImage,deleteNote,audioFileDelete,audioIcon,notePrivacy;
+    private ImageView noteImage,deleteImage,deleteNote,audioFileDelete,audioIcon,notePrivacy;
     private ImageButton noteBackBtn,noteSaveBtn,noteAlertBtn,micTitle,micDes,cancelAlert;
     private TextView noteTime,alertTime,audioFileTitle;
     private EditText noteTitle,noteDescription;
@@ -119,12 +119,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
     private String audioFilePath;
     private String recordFile;
 
-    private AudioRecordView audioRecordView;
-
     private  String currentDateAndTime;
-    private Uri imageUri;
-
-    private Bitmap paintBtm;
 
     private MediaRecorder mediaRecorder;
     private boolean isRecording = false;
@@ -145,9 +140,9 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         //initially add note background color white
         selectedNoteColor = "#ffffff";
         selectedFontColor = "#000000";
-        selectedFontFamily = "a";
         selectedImagePath = null;
         selectedAlarmTime = null;
+        selectedFontFamily = null;
 
 
         //progress dialog setup
@@ -171,8 +166,6 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         micDes.setOnClickListener(this);
         cancelAlert.setOnClickListener(this);
 
-        //getPaintImageFromIntent
-         getPaintImage();
          //getPresentTime
          getPresentTime();
          //getNoteCategory
@@ -195,10 +188,6 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
                         return true;
                     case R.id.addImage:
                         showImagePickerDialog();
-                        return true;
-                    case R.id.addPaint:
-                        Intent intent = new Intent(AddNoteActivity.this, PaintActivity.class);
-                        startActivity(intent);
                         return true;
 
                     case R.id.addVoice:
@@ -379,6 +368,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
                 }
             });
         }
+
         if (alreadyAvailableNote.getNoteBgColor() != null){
             noteBackgroundColor.setBackgroundColor(Color.parseColor(alreadyAvailableNote.getNoteBgColor()));
             selectedNoteColor = alreadyAvailableNote.getNoteBgColor();
@@ -392,11 +382,34 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         if (alreadyAvailableNote.getAlarmTime()!=null){
+            alertTimerLayout.setVisibility(View.VISIBLE);
             alertTime.setText(alreadyAvailableNote.getAlarmTime());
             selectedAlarmTime= alreadyAvailableNote.getAlarmTime();
+
+        }
+
+        if (alreadyAvailableNote.getFontFamily()!=null){
+            if (alreadyAvailableNote.getFontFamily().equals("amatic"))
+            {
+                noteTitle.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.amaticbold));
+                noteDescription.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.amaticbold));
+                noteTime.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.amaticbold));
+                selectedFontFamily = alreadyAvailableNote.getFontFamily();
+            }else  if (alreadyAvailableNote.getFontFamily().equals("pacific")){
+                noteTitle.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.pacifico));
+                noteDescription.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.pacifico));
+                noteTime.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.pacifico));
+                selectedFontFamily = alreadyAvailableNote.getFontFamily();
+            }else if (alreadyAvailableNote.getFontFamily().equals("roboto")){
+                noteTitle.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.robotoblack));
+                noteDescription.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.robotoblack));
+                noteTime.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.robotoblack));
+                selectedFontFamily = alreadyAvailableNote.getFontFamily();
+            }
         }
 
         if (alreadyAvailableNote.getNoteCategory()!=null){
+            selectedNoteCategory = alreadyAvailableNote.getNoteCategory();
             selectedNoteCategory = alreadyAvailableNote.getNoteCategory();
         }
         if (alreadyAvailableNote.isNoteProtected()){
@@ -582,19 +595,6 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         currentDateAndTime = sdf.format(new Date());
         noteTime.setText(currentDateAndTime);
     }
-
-    // get image from paint activity
-    private void getPaintImage() {
-        if (getIntent().hasExtra("image")){
-             paintBtm = BitmapFactory.decodeByteArray(
-                    getIntent().getByteArrayExtra("image"),0,getIntent()
-                            .getByteArrayExtra("image").length);
-            Toast.makeText(this, "Successfully get intent", Toast.LENGTH_SHORT).show();
-            noteImage.setImageBitmap(paintBtm);
-            noteImage.setVisibility(View.VISIBLE);
-        }
-    }
-
 
 
     private void micFunction(String s) {

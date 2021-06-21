@@ -58,7 +58,7 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            android:src="@drawable/pencilnote" />
+                            android:src="@drawable/logo" />
 
                         <View
                             android:layout_width="15dp"

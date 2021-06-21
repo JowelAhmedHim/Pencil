@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Pencil"
-        android:windowSoftInputMode="stateVisible">
+        android:windowSoftInputMode="stateVisible"
+        >
         <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +26,6 @@
         </activity>
         <activity android:name=".activity.SettingActivity" />
         <activity android:name=".activity.About" />
-        <activity android:name=".activity.PaintActivity" />
         <activity android:name=".activity.AddNoteActivity" />
         <activity android:name=".activity.MainActivity"/>
 

@@ -71,7 +71,7 @@ public class ProtectedFragment extends Fragment implements NotesListener {
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         noteList = new ArrayList<>();
 
-        notesProtectedAdapter = new ProtectedNoteAdapter(noteList,this);
+        notesProtectedAdapter = new ProtectedNoteAdapter(getContext(),noteList,this);
         recyclerView.setAdapter(notesProtectedAdapter);
 
         getNotes(REQUEST_SHOW_NOTE,false);

@@ -21,7 +21,8 @@
             android:id="@+id/note_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="6dp"
+            android:background="@drawable/alartbg"
+            android:padding="6dp"
             android:text="Personal"
             android:textColor="@color/black"
             android:textStyle="italic"
@@ -30,9 +31,9 @@
             android:id="@+id/timeNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/note_category"
-            android:layout_margin="6dp"
             android:text="04/05/21 10:40"
             android:fontFamily="@font/poppinsregular"
             android:textSize="10sp"/>
@@ -43,9 +44,7 @@
             android:layout_below="@+id/timeNote"
             android:layout_alignParentStart="true"
             android:text="Note Title"
-            android:textSize="18sp"
-            android:layout_margin="6dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:fontFamily="@font/poppinsregular"
             android:textStyle="bold"
             android:textColor="@color/black"/>
@@ -68,7 +67,6 @@
             android:text="Note Description"
             android:fontFamily="@font/poppinsregular"
             android:textSize="12sp"
-            android:layout_margin="6dp"
             android:textColor="@color/black"/>
         <ImageView
             android:id="@+id/imageNote"
@@ -76,6 +74,7 @@
             android:layout_height="200dp"
             android:adjustViewBounds="true"
             android:visibility="visible"
+            android:layout_marginTop="5dp"
             android:layout_below="@id/descriptionNote"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
@@ -97,8 +96,8 @@
                 android:id="@+id/alarmIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_add_alert_24"
                 android:text="10:10"
+                android:layout_marginTop="5dp"
                 android:drawableStart="@drawable/ic_baseline_add_alert_24"
                 android:drawableTint="@color/orange"
                 android:textColor="@color/orange"
@@ -111,6 +110,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="100dp"

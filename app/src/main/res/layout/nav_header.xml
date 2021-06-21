@@ -15,7 +15,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:contentDescription="Navigation Header icon"
-            app:srcCompat="@drawable/pencilnote" />
+            app:srcCompat="@drawable/logo" />
 
         <TextView
             android:layout_width="wrap_content"

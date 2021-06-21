@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -77,9 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (savedInstanceState == null){
             getSupportFragmentManager().beginTransaction().replace(R.id.frame,new NotesFragment()).commit();
             navigationView.setCheckedItem(R.id.notes);
-
         }
-
     }
 
 
@@ -90,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }else {
             super.onBackPressed();
         }
-
     }
 
 
@@ -165,22 +163,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = LayoutInflater.from(this).inflate(R.layout.note_password,(ViewGroup)findViewById(R.id.note_password_layout));
         EditText edPassword = view.findViewById(R.id.password_field);
-        Button submit = view.findViewById(R.id.password_submit);
         builder.setView(view);
-        alertDialog = builder.create();
-        submit.setOnClickListener(new View.OnClickListener() {
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(DialogInterface dialog, int which) {
                 String password = edPassword.getText().toString();
                 if (password.equals(real)){
                     fragment = new ProtectedFragment();
                     loadFragment(fragment);
                     alertDialog.dismiss();
                 }else {
-                    Toast.makeText(MainActivity.this, "Wrong Password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Wrong Password , Returning all notes", Toast.LENGTH_SHORT).show();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame,new NotesFragment()).commit();
+                    navigationView.setCheckedItem(R.id.notes);
                 }
             }
         });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame,new NotesFragment()).commit();
+                navigationView.setCheckedItem(R.id.notes);
+
+            }
+        });
+
+        builder.setCancelable(false);
+        alertDialog = builder.create();
         alertDialog.show();
         drawerLayout.closeDrawer(GravityCompat.START);
     }

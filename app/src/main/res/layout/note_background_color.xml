@@ -46,7 +46,7 @@
                 android:id="@+id/viewColor2"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/note_background_color_red"/>
+                android:background="@drawable/note_background_color_lightgreen"/>
             <ImageView
                 android:id="@+id/imageColor2"
                 android:layout_width="40dp"
@@ -62,7 +62,7 @@
                 android:id="@+id/viewColor3"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/note_background_color_yellow"/>
+                android:background="@drawable/note_background_color_pest"/>
             <ImageView
                 android:id="@+id/imageColor3"
                 android:layout_width="40dp"
@@ -78,7 +78,7 @@
                 android:id="@+id/viewColor4"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/note_background_color_balck"/>
+                android:background="@drawable/note_background_color_violet"/>
             <ImageView
                 android:id="@+id/imageColor4"
                 android:layout_width="40dp"
@@ -94,7 +94,7 @@
                 android:id="@+id/viewColor5"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/note_background_color_green"/>
+                android:background="@drawable/note_background_color_orange"/>
             <ImageView
                 android:id="@+id/imageColor5"
                 android:layout_width="40dp"

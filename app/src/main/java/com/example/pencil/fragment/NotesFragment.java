@@ -85,7 +85,7 @@ public class NotesFragment extends Fragment implements NotesListener {
         recyclerView = view.findViewById(R.id.noteRecyclerView);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         noteList = new ArrayList<>();
-        notesAdapter = new NotesAdapter(noteList,this);
+        notesAdapter = new NotesAdapter(getContext(),noteList,this);
         recyclerView.setAdapter(notesAdapter);
 
         getNotes(REQUEST_SHOW_NOTE,false);

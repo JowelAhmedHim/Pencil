@@ -42,13 +42,15 @@ import java.util.TimerTask;
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
 
 
+    private Context context;
     private List<Note> notes;
     private NotesListener notesListener;
     private List<Note> newList;
     private Timer timer;
 
 
-    public NotesAdapter(List<Note> notes,NotesListener notesListener) {
+    public NotesAdapter(Context context,List<Note> notes,NotesListener notesListener) {
+        this.context = context;
         this.notes = notes;
         this.notesListener = notesListener;
         newList = notes;
@@ -130,9 +132,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
                 lockLayout.setVisibility(View.GONE);
                 if (note.getImagePath() == null){
                     noteImage.setVisibility(View.GONE);
-                }else {
+                }
+                if (note.getImagePath()!=null){
                     noteImage.setImageBitmap(BitmapFactory.decodeFile(note.getImagePath()));
                     noteImage.setVisibility(View.VISIBLE);
+                }
+
+                if (note.getNoteBgColor()==null){
+                    cardView.setCardBackgroundColor(Color.WHITE);
                 }
 
                 if (note.getNoteBgColor()!=null){
@@ -142,9 +149,41 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
                 if (note.getAudioPath()!=null){
                     audioFileIcon.setVisibility(View.VISIBLE);
                 }
+
+                if (note.getAlarmTime()==null){
+                    alarmIcon.setVisibility(View.GONE);
+                }
                 if (note.getAlarmTime()!=null){
                     alarmIcon.setVisibility(View.VISIBLE);
                     alarmIcon.setText(note.getAlarmTime());
+                }
+
+                if (note.getFontFamily()==null){
+                    noteTitle.setTypeface(ResourcesCompat.getFont(context,R.font.poppinsregular));
+                    noteDes.setTypeface(ResourcesCompat.getFont(context,R.font.poppinsregular));
+                    noteDateTime.setTypeface(ResourcesCompat.getFont(context,R.font.poppinsregular));
+                    alarmIcon.setTypeface(ResourcesCompat.getFont(context,R.font.poppinsregular));
+                }
+                if (note.getFontFamily()!=null){
+
+                    if (note.getFontFamily().equals("amatic"))
+                    {
+                        noteTitle.setTypeface(ResourcesCompat.getFont(context,R.font.amaticbold));
+                        noteDes.setTypeface(ResourcesCompat.getFont(context,R.font.amaticbold));
+                        noteDateTime.setTypeface(ResourcesCompat.getFont(context,R.font.amaticbold));
+                        alarmIcon.setTypeface(ResourcesCompat.getFont(context,R.font.amaticbold));
+                    }else  if (note.getFontFamily().equals("pacific")){
+                        noteTitle.setTypeface(ResourcesCompat.getFont(context,R.font.pacifico));
+                        noteDes.setTypeface(ResourcesCompat.getFont(context,R.font.pacifico));
+                        noteDateTime.setTypeface(ResourcesCompat.getFont(context,R.font.pacifico));
+                        alarmIcon.setTypeface(ResourcesCompat.getFont(context,R.font.pacifico));
+                    }else if (note.getFontFamily().equals("roboto")){
+                        noteTitle.setTypeface(ResourcesCompat.getFont(context,R.font.robotoblack));
+                        noteDes.setTypeface(ResourcesCompat.getFont(context,R.font.robotoblack));
+                        noteDateTime.setTypeface(ResourcesCompat.getFont(context,R.font.robotoblack));
+                        alarmIcon.setTypeface(ResourcesCompat.getFont(context,R.font.robotoblack));
+                    }
+
                 }
             }
 

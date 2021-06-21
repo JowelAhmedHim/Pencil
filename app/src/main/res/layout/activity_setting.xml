@@ -104,7 +104,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Real Time Mode"
+                                android:text="Alert Notification"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                                 android:textColor="@color/grey_90"
                                 android:textStyle="bold"/>
@@ -135,7 +135,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="1px"
                         android:background="@color/grey_10" />
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -156,7 +155,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Day/Night Mode"
+                                android:text="Night Mode"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                                 android:textColor="@color/grey_90"
                                 android:textStyle="bold" />
@@ -189,93 +188,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="1px"
                         android:background="@color/grey_10" />
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingTop="15dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="15dp"
-                            android:text="Push Notifications"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                            android:textColor="@color/grey_90"
-                            android:textStyle="bold" />
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:gravity="center_vertical"
-                            android:minHeight="60dp"
-                            android:orientation="horizontal"
-                            android:paddingLeft="15dp"
-                            android:paddingRight="15dp">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Daily Reminder"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                                android:textColor="@color/grey_40" />
-
-                            <View
-                                android:layout_width="10dp"
-                                android:layout_height="wrap_content" />
-
-                            <androidx.appcompat.widget.SwitchCompat
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:checked="true"/>
-
-                            <View
-                                android:layout_width="10dp"
-                                android:layout_height="wrap_content" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:background="@color/grey_10" />
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:gravity="center_vertical"
-                            android:minHeight="60dp"
-                            android:orientation="horizontal"
-                            android:paddingLeft="15dp"
-                            android:paddingRight="15dp">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Notification Sound"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                                android:textColor="@color/grey_40" />
-                            <View
-                                android:layout_width="10dp"
-                                android:layout_height="wrap_content" />
-
-                            <androidx.appcompat.widget.SwitchCompat
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:checked="true"/>
-                            <View
-                                android:layout_width="10dp"
-                                android:layout_height="wrap_content" />
-
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:background="@color/grey_10" />
-                    </LinearLayout>
 
                 </LinearLayout>
             </LinearLayout>
