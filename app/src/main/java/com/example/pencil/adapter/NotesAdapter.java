@@ -119,9 +119,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             noteDes.setText(note.getNoteText());
             noteCategory.setText(note.getNoteCategory());
 
-            noteTitle.setTextColor(Color.parseColor(note.getFontColor()));
-            noteDateTime.setTextColor(Color.parseColor(note.getFontColor()));
-            noteDes.setTextColor(Color.parseColor(note.getFontColor()));
+
 
 
             if (note.isNoteProtected()){
@@ -142,8 +140,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
                     cardView.setCardBackgroundColor(Color.WHITE);
                 }
 
+                if (note.getFontColor()!=null){
+                    noteTitle.setTextColor(Color.parseColor(note.getFontColor()));
+                    noteDateTime.setTextColor(Color.parseColor(note.getFontColor()));
+                    noteDes.setTextColor(Color.parseColor(note.getFontColor()));
+
+                }
+
                 if (note.getNoteBgColor()!=null){
                     cardView.setCardBackgroundColor(Color.parseColor(note.getNoteBgColor()));
+                }
+
+                if (note.getAudioPath()==null){
+                    audioFileIcon.setVisibility(View.GONE);
                 }
 
                 if (note.getAudioPath()!=null){

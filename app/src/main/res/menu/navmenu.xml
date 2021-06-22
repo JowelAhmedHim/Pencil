@@ -27,7 +27,6 @@
         <item
             android:title="App">
             <menu>
-                <group android:checkableBehavior="single">
                     <item
                         android:id="@+id/rateUs"
                         android:title="Rate Us"
@@ -44,8 +43,6 @@
                         android:id="@+id/About"
                         android:title="About"
                         android:icon="@drawable/ic_baseline_info_24"/>
-
-                </group>
 
             </menu>
         </item>

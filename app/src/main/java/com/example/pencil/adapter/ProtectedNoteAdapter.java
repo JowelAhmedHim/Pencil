@@ -99,9 +99,7 @@ public class ProtectedNoteAdapter extends RecyclerView.Adapter<ProtectedNoteAdap
             noteDateTime.setText(note.getDateTime());
             noteDes.setText(note.getNoteText());
 
-            noteTitle.setTextColor(Color.parseColor(note.getFontColor()));
-            noteDateTime.setTextColor(Color.parseColor(note.getFontColor()));
-            noteDes.setTextColor(Color.parseColor(note.getFontColor()));
+
 
             if (note.isNoteProtected()){
 
@@ -120,6 +118,17 @@ public class ProtectedNoteAdapter extends RecyclerView.Adapter<ProtectedNoteAdap
 
                 if (note.getNoteBgColor()!=null){
                     cardView.setCardBackgroundColor(Color.parseColor(note.getNoteBgColor()));
+                }
+
+                if (note.getFontColor()!=null){
+                    noteTitle.setTextColor(Color.parseColor(note.getFontColor()));
+                    noteDateTime.setTextColor(Color.parseColor(note.getFontColor()));
+                    noteDes.setTextColor(Color.parseColor(note.getFontColor()));
+
+                }
+
+                if (note.getAudioPath()==null){
+                    audioFileIcon.setVisibility(View.GONE);
                 }
 
                 if (note.getAudioPath()!=null){

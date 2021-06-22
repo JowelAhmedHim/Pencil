@@ -64,7 +64,6 @@ public class NotesFragment extends Fragment implements NotesListener {
 
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -161,7 +160,7 @@ public class NotesFragment extends Fragment implements NotesListener {
                     notesAdapter.notifyItemInserted(0);
                     recyclerView.smoothScrollToPosition(0);
 
-                }else  if (requestCode == REQUEST_UPDATE_NOTE){
+                }else if (requestCode == REQUEST_UPDATE_NOTE){
 
 
                     noteList.remove(moteClickedPosition);
@@ -176,7 +175,6 @@ public class NotesFragment extends Fragment implements NotesListener {
                     }else {
                         noteList.add(moteClickedPosition,notes.get(moteClickedPosition));
                         notesAdapter.notifyItemChanged(moteClickedPosition);
-
                     }
                 }
             }

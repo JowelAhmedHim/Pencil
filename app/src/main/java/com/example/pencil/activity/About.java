@@ -15,7 +15,7 @@ import com.example.pencil.R;
 
 public class About extends AppCompatActivity implements View.OnClickListener {
 
-    Toolbar toolbar;
+    private Toolbar toolbar;
     private ImageButton fb,youtube,linkIn,github;
 
     @Override
@@ -37,7 +37,6 @@ public class About extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void init() {
-
         fb = findViewById(R.id.fb_btn);
         youtube = findViewById(R.id.youtube_btn);
         linkIn = findViewById(R.id.linkIn_btn);

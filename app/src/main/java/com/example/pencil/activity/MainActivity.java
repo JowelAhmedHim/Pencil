@@ -61,18 +61,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //FIND VIEW
         drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navView);
-
         navigationView.setNavigationItemSelectedListener(this);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame,new NotesFragment()).commit();
-
 
         //setup toggle to display hamburger icon with nice animation
         toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.white));
-
 
 
         if (savedInstanceState == null){
@@ -90,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.onBackPressed();
         }
     }
-
 
 
     @Override

@@ -43,6 +43,9 @@ dependencies {
     //visualizer for audio
     implementation 'com.github.Armen101:AudioRecordView:1.0.5'
 
+    //material design
+    implementation 'com.google.android.material:material:1.2.1'
+
 
 
 

@@ -137,13 +137,13 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
         
-        //initially add note background color white
+        //initially set note attribute
         selectedNoteColor = "#ffffff";
-        selectedFontColor = "#000000";
+        selectedFontColor = null;
         selectedImagePath = null;
         selectedAlarmTime = null;
         selectedFontFamily = null;
-
+        audioFilePath = null;
 
         //progress dialog setup
         progressDialog = new ProgressDialog(this);
@@ -191,7 +191,11 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
                         return true;
 
                     case R.id.addVoice:
-                        showBottomSheetVoiceDialog();
+                        if (checkAudioRecordPermission()){
+                            showBottomSheetVoiceDialog();
+                        }else {
+                            requestAudioRecordPermission();
+                        }
                         return true;
                     case R.id.addColor:
                         showBottomSheetBackgroundColor();
@@ -228,8 +232,6 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         alertTimerLayout = findViewById(R.id.alertTimerLayout);
         cancelAlert = findViewById(R.id.deleteAlertTime);
 
-
-
     }
     @Override
     public void onClick(View v) {
@@ -265,7 +267,6 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
                 selectedAlarmTime = null;
                 alertTimerLayout.setVisibility(View.GONE);
                 break;
-
             case R.id.deleteImage:
                 noteImage.setImageBitmap(null);
                 noteImage.setVisibility(View.GONE);
@@ -336,8 +337,6 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         noteDescription.setText(alreadyAvailableNote.getNoteText());
         noteTime.setText(alreadyAvailableNote.getDateTime());
 
-
-
         if(alreadyAvailableNote.getImagePath() != null && !alreadyAvailableNote.getImagePath().trim().isEmpty()){
             noteImage.setImageBitmap(BitmapFactory.decodeFile(alreadyAvailableNote.getImagePath()));
             noteImage.setVisibility(View.VISIBLE);
@@ -354,7 +353,6 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
                 }
             });
         }
-
 
 
         if (alreadyAvailableNote.getAudioPath()!=null && !alreadyAvailableNote.getAudioPath().trim().isEmpty())
@@ -419,13 +417,14 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
 
     //deleting note from database
     private void showDeleteNoteAlertDialog() {
-        if (alertDialog == null){
+
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             View view = LayoutInflater.from(this).inflate(
                     R.layout.delete_note_dialog,
                     (ViewGroup)findViewById(R.id.deleteNoteContainer)
             );
             builder.setView(view);
+            builder.setCancelable(false);
             alertDialog = builder.create();
             if (alertDialog.getWindow()!=null){
                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
@@ -463,7 +462,6 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
                 }
             });
             alertDialog.show();
-        }
 
     }
 
@@ -591,7 +589,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
 
     //get note save time
     private void getPresentTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMMM yyyy HH:mm a", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd/MM/yyyy ,HH:mm a", Locale.getDefault());
         currentDateAndTime = sdf.format(new Date());
         noteTime.setText(currentDateAndTime);
     }
@@ -645,6 +643,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
 
 
     }
+
     private void playAudioFile(String audioFilePath) {
         String file = audioFilePath;
         if (!isAudioPlaying){
@@ -837,25 +836,23 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onClick(View v) {
 
-                   if (isPaused)
-                   {
-                       timer.setBase(SystemClock.elapsedRealtime()-pauseOffset);
-                       timer.start();
-                       resumedRecording();
-                       playBtn.setImageResource(R.drawable.ic_baseline_pause_circle_24);
-                   }
-                   else if (isRecording)
-                   {
-                       timer.stop();
-                       pauseOffset = SystemClock.elapsedRealtime() - timer.getBase();
-                       pauseRecording();
-                       playBtn.setImageResource(R.drawable.ic_baseline_play_circle_24);
-                   }else {
-                       timer.setBase(SystemClock.elapsedRealtime()-pauseOffset);
-                       timer.start();
-                       startRecording();
-                       playBtn.setImageResource(R.drawable.ic_baseline_pause_circle_24);
-                   }
+                if (isPaused) {
+                    timer.setBase(SystemClock.elapsedRealtime()-pauseOffset);
+                    timer.start();
+                    resumedRecording();
+                    playBtn.setImageResource(R.drawable.ic_baseline_pause_circle_24);
+                }
+                else if (isRecording) {
+                    timer.stop();
+                    pauseOffset = SystemClock.elapsedRealtime() - timer.getBase();
+                    pauseRecording();
+                    playBtn.setImageResource(R.drawable.ic_baseline_play_circle_24);
+                }else {
+                    timer.setBase(SystemClock.elapsedRealtime()-pauseOffset);
+                    timer.start();
+                    startRecording();
+                    playBtn.setImageResource(R.drawable.ic_baseline_pause_circle_24);
+                }
             }
         });
 
@@ -867,7 +864,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
                     timer.setBase(SystemClock.elapsedRealtime());
                     pauseOffset = 0;
                     stopRecording();
-                    Toast.makeText(AddNoteActivity.this, ""+audioFilePath, Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(AddNoteActivity.this, ""+audioFilePath, Toast.LENGTH_SHORT).show();
                     noteAudioFileLayout.setVisibility(View.VISIBLE);
                     audioFileTitle.setText(recordFile);
                 }else {
@@ -909,7 +906,6 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
             requestAudioRecordPermission();
             return;
         }
-
         //start recording
         getFilePath = this.getExternalFilesDir("/").getAbsolutePath();
 
@@ -1060,6 +1056,9 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
 
                         //permission granted
 
+                        showBottomSheetVoiceDialog();
+
+
                     }else {
                         //permission denied
                         Toast.makeText(this,"Audio permission necessary..",Toast.LENGTH_SHORT).show();
@@ -1087,7 +1086,6 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
                         noteImage.setVisibility(View.VISIBLE);
                         deleteImage.setVisibility(View.VISIBLE);
                         selectedImagePath = getPathFromUri(selectedImage);
-                        Toast.makeText(this, "File path"+selectedImagePath, Toast.LENGTH_SHORT).show();
                     }catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -1135,6 +1133,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         String path = MediaStore.Images.Media.insertImage(applicationContext.getContentResolver(),bitmap,"Title",null);
         return Uri.parse(path);
     }
+
     private String getPathFromUri (Uri contentUrl){
         String filePath;
         Cursor cursor = getContentResolver().query(contentUrl,null,null,null,null);
@@ -1148,6 +1147,5 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         }
         return filePath;
     }
-    
 
 }
